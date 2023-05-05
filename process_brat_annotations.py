@@ -1,9 +1,11 @@
+import os
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
-from constants import COLLECTION_NAME, PATH_TO_BRAT
+from constants import COLLECTION_NAME, FILE_NAME, FOLDER_NAME, PATH_TO_BRAT
 
 if __name__ == "__main__":
-    collection_path = PATH_TO_BRAT + "/data/" + COLLECTION_NAME + "/"
+    collection_path = PATH_TO_BRAT + "/" + FOLDER_NAME + "/"
+    collection_path += COLLECTION_NAME + "/" if COLLECTION_NAME else ""
     """
     files = [
         AnnotationFile(file_name=file_name, path=collection_path)
@@ -15,8 +17,8 @@ if __name__ == "__main__":
 
     print([ann.to_string(usage="info") for ann in annotations])
     """
-
-    test_file = AnnotationFile(file_name="test.ann", path=collection_path)
+    
+    test_file = AnnotationFile(file_name=FILE_NAME, path=collection_path)
     test_file.write(
         [
             Annotation(
@@ -41,3 +43,4 @@ if __name__ == "__main__":
     annotations = test_file.read()
 
     print([ann.to_string(usage="info") for ann in annotations])
+    

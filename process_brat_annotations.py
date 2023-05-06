@@ -1,12 +1,19 @@
 import os
+
+from TextFile import TextFile
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from constants import COLLECTION_NAME, FILE_NAME, FOLDER_NAME, PATH_TO_BRAT
 
 if __name__ == "__main__":
+    
     collection_path = PATH_TO_BRAT + "/" + FOLDER_NAME + "/"
     collection_path += COLLECTION_NAME + "/" if COLLECTION_NAME else ""
+
     """
+    Reading all annotation files within a directory
+    -----------------------------------------------
+
     files = [
         AnnotationFile(file_name=file_name, path=collection_path)
         for file_name in os.listdir(collection_path)
@@ -17,12 +24,16 @@ if __name__ == "__main__":
 
     print([ann.to_string(usage="info") for ann in annotations])
     """
-    
-    test_file = AnnotationFile(file_name=FILE_NAME, path=collection_path)
+
+    """
+    Writing into a new annotation file
+    ----------------------------------
+
+    test_file = AnnotationFile(file_name=FILE_NAME + ".ann", path=collection_path)
     test_file.write(
         [
             Annotation(
-                file_name="test.ann",
+                file_name=FILE_NAME + ".ann",
                 id="T1",
                 type="Candidate",
                 begin=13,
@@ -30,7 +41,7 @@ if __name__ == "__main__":
                 excerpt="Aspirin",
             ),
             Annotation(
-                file_name="test.ann",
+                file_name=FILE_NAME + ".ann",
                 id="T2",
                 type="Candidate",
                 begin=51,
@@ -39,8 +50,23 @@ if __name__ == "__main__":
             ),
         ]
     )
-
     annotations = test_file.read()
-
     print([ann.to_string(usage="info") for ann in annotations])
+    """
+
+    # Creating a cleared dataset for supervised learning out of the annotations
+    # -------------------------------------------------------------------------
+
+    files = [
+        AnnotationFile(file_name=file_name, path=collection_path)
+        for file_name in os.listdir(collection_path)
+        if ".ann" in file_name
+    ]
+    annotation_lists = [file.read() for file in files]
+    annotations = {(ann.excerpt, ann.type)  for ann_list in annotation_lists for ann in ann_list}
+    #print(annotations)
+
+    text_file = TextFile(file_name=FILE_NAME + ".txt", path=collection_path)
+    print(text_file.get_sentence_info())
+
     

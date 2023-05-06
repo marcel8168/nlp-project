@@ -27,7 +27,7 @@ class AnnotationFile:
         """
 
         with open(self.path + self.file_name, "r", encoding="utf8") as file:
-            lines = [line for line in file.readlines() if line[0] == "T"]
+            lines = [line for line in file.readlines() if line.startswith("T")]
             annotation_lines = [
                 Annotation(
                     self.file_name,

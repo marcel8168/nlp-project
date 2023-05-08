@@ -1,4 +1,5 @@
 import os
+from Dataset import Dataset
 
 from TextFile import TextFile
 from Annotation import Annotation
@@ -57,16 +58,6 @@ if __name__ == "__main__":
     # Creating a cleared dataset for supervised learning out of the annotations
     # -------------------------------------------------------------------------
 
-    files = [
-        AnnotationFile(file_name=file_name, path=collection_path)
-        for file_name in os.listdir(collection_path)
-        if ".ann" in file_name
-    ]
-    annotation_lists = [file.read() for file in files]
-    annotations = {(ann.excerpt, ann.type)  for ann_list in annotation_lists for ann in ann_list}
-    #print(annotations)
-
-    text_file = TextFile(file_name=FILE_NAME + ".txt", path=collection_path)
-    print(text_file.get_sentence_info())
-
+    dataset = Dataset(path_to_collection=collection_path)
+    dataset.to_json(collection_path, "test.json")
     

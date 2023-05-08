@@ -1,6 +1,6 @@
-import re
 from typing import Optional
-from Annotation import Annotation
+
+import pandas as pd
 import nltk
 
 
@@ -36,11 +36,11 @@ class TextFile:
 
         return self.text
     
-    def get_sentence_info(self) -> list[any]:
+    def get_sentence_info(self) -> pd.DataFrame:
         if not self.text:
             self.read()
         text = self.text
-        sentences = nltk.sent_tokenize(self.text)
+        sentences = nltk.sent_tokenize(text=self.text)
         sentence_info = []
         end_index = 0
 
@@ -55,5 +55,5 @@ class TextFile:
             else:
                 raise Exception(f"Sentence '{sentence}' not found.")
             
-        return sentence_info
+        return pd.DataFrame(data=sentence_info, columns=["sentence", "start", "end"])
     

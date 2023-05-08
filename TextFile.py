@@ -6,12 +6,13 @@ import nltk
 
 class TextFile:
     """
-    The AnnotationFile object contains information of an annotation file.
+    The TextFile object contains information of an text file.
 
     Attributes
     ----------
-        file_name (str): Name of the file (with file extension) where the annotation is stored in,
-        path (str): Location where the file is stored at
+        file_name (str): Name of the file (with file extension) where the text is stored in,
+        path (str): Location where the file is stored at,
+        text (str): Content of the file
     """
 
     def __init__(self, file_name: str, path: str, text: Optional[str] = None) -> None:
@@ -23,11 +24,11 @@ class TextFile:
 
     def read(self) -> str:
         """
-        Read the content of the annotation file object.
+        Read the content of the text file object.
 
         Returns
         -------
-            set[Annotation]: Set of Annotation objects.
+            str: Content of the text file.
         """
 
         with open(self.path + self.file_name, "r", encoding="utf8") as file:
@@ -37,6 +38,18 @@ class TextFile:
         return self.text
     
     def get_sentence_info(self) -> pd.DataFrame:
+        """
+        Get all sentences with start and end index information.
+
+        Raises
+        ------
+            Exception: If tokenized sentence not found in text.
+
+        Returns
+        -------
+            Pandas.DataFrame[str: sentence, int: start, int: end]: DataFrame with all sentences with information about start and end index.
+
+        """
         if not self.text:
             self.read()
         text = self.text

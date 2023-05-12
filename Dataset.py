@@ -31,17 +31,24 @@ class Dataset:
         annotation_lists = [file.read() for file in annotation_files]
         annotation_lists = filter(None, annotation_lists)
         dataset = []
-        for annotation_list in annotation_lists:
-            text_file = list(filter(lambda file: file.file_name[:-4] == annotation_list[0].file_name[:-4], text_files))[0]
+        for text_file in text_files:
+            annotation_file = list(filter(lambda file: file.file_name[:-4] == text_file.file_name[:-4], annotation_files))[0]
+            annotations = annotation_file.read()
             sentence_info = text_file.get_sentence_info()
-            for annotation in annotation_list:
-                text_excerpt_info = sentence_info.query(f"start <= {annotation.begin} <= end")
-                data = {"text":text_excerpt_info["sentence"].values[0],
-                        "drug":[annotation.excerpt],
-                        "drug_indices_start": [annotation.begin - text_excerpt_info["start"].values[0]],
-                        "drug_indices_end": [annotation.end - text_excerpt_info["start"].values[0]]
-                        }
-                dataset.append(data)
+            if annotations and not sentence_info.empty:
+                for idx in sentence_info.index:
+                    included_annotations = [annotation for annotation in annotations if annotation.begin >= sentence_info["start"][idx] and annotation.end <= sentence_info["end"][idx]]
+                    if not included_annotations:
+                        continue
+                    included_excerpts = [annotation.excerpt for annotation in included_annotations]
+                    included_start_indices = [annotation.begin - sentence_info["start"][idx] for annotation in included_annotations]
+                    included_end_indices = [annotation.end - sentence_info["start"][idx] for annotation in included_annotations]
+                    data = {"text":sentence_info["sentence"][idx],
+                            "drug":included_excerpts,
+                            "drug_indices_start": included_start_indices,
+                            "drug_indices_end": included_end_indices
+                            }
+                    dataset.append(data)
         dataset = pd.DataFrame(data=dataset)
         self.dataset = dataset
         return dataset

@@ -15,8 +15,8 @@ class Dataset:
         dataset []
     """
 
-    def __init__(self, path_to_collection: Optional[str] = None, 
-                 annotation_files: Optional[list[AnnotationFile]] = None, 
+    def __init__(self, path_to_collection: Optional[str] = None,
+                 annotation_files: Optional[list[AnnotationFile]] = None,
                  text_files: Optional[list[TextFile]] = None) -> None:
         if path_to_collection:
             self.dataset = self._create_from_collection(path_to_collection=path_to_collection)
@@ -36,7 +36,11 @@ class Dataset:
             sentence_info = text_file.get_sentence_info()
             for annotation in annotation_list:
                 text_excerpt_info = sentence_info.query(f"start <= {annotation.begin} <= end")
-                data = [text_excerpt_info["sentence"].values[0], annotation.excerpt, annotation.begin - text_excerpt_info["start"].values[0], annotation.end - text_excerpt_info["start"].values[0]]
+                data = {"text":text_excerpt_info["sentence"].values[0],
+                        "drug":[annotation.excerpt],
+                        "drug_indices_start": [annotation.begin - text_excerpt_info["start"].values[0]],
+                        "drug_indices_end": [annotation.end - text_excerpt_info["start"].values[0]]
+                        }
                 dataset.append(data)
         dataset = pd.DataFrame(data=dataset)
         self.dataset = dataset

@@ -59,5 +59,5 @@ if __name__ == "__main__":
     # -------------------------------------------------------------------------
 
     dataset = Dataset(path_to_collection=collection_path)
-    dataset.to_json(collection_path, "test.json")
+    dataset.to_json(collection_path, "test.jsonl")
     

@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 1.8.1
+  version: 1.9.1
 plugins:
   sources:
     - id: trunk
@@ -20,3 +20,10 @@ runtimes:
     - go@1.19.5
     - node@18.12.1
     - python@3.10.8
+actions:
+  disabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+  enabled:
+    - trunk-upgrade-available

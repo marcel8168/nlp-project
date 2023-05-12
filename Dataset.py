@@ -12,7 +12,7 @@ class Dataset:
 
     Attributes
     ----------
-        dataset []
+        dataset (DataFrame): Stores all annotated data
     """
 
     def __init__(self, path_to_collection: Optional[str] = None,
@@ -27,6 +27,17 @@ class Dataset:
 
     def _create_from_files(self, annotation_files: list[AnnotationFile], text_files: list[TextFile]) -> pd.DataFrame:
         """
+        Create a dataset object from files.
+
+        Arguments:
+        ---------
+            annotation_files (list[AnnotationFile]): List of AnnotationFile objects.
+            text_files (list[TextFile]): List of TextFile objects.
+
+        Returns:
+        -------
+            DataFrame: Dataset object.
+
         """
         annotation_lists = [file.read() for file in annotation_files]
         annotation_lists = filter(None, annotation_lists)
@@ -55,6 +66,16 @@ class Dataset:
         
     def _create_from_collection(self, path_to_collection: str) -> pd.DataFrame:
         """
+        Create a dataset object from the collection path.
+
+        Arguments:
+        ---------
+            path_to_collection (str): Path to the collection directory.
+
+        Returns:
+        -------
+            DataFrame: Dataset object.
+
         """
         files = os.listdir(path=path_to_collection)
         annotation_files = [
@@ -72,4 +93,13 @@ class Dataset:
         return self._create_from_files(annotation_files=annotation_files, text_files=text_files)
 
     def to_json(self, path, name) -> None:
+        """
+        Convert the dataset object to a JSON-File.
+
+        Arguments:
+        ---------
+            path (str): Path to the storage location.
+            name (str): File name.
+
+        """
         self.dataset.to_json(path_or_buf=path + name, orient="records", lines=True)

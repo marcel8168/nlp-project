@@ -54,10 +54,10 @@ if __name__ == "__main__":
     annotations = test_file.read()
     print([ann.to_string(usage="info") for ann in annotations])
     """
-
+    """
     # Creating a cleared dataset for supervised learning out of the annotations
     # -------------------------------------------------------------------------
 
     dataset = Dataset(path_to_collection=collection_path)
     dataset.to_json(collection_path, "test.jsonl")
-    
+    """

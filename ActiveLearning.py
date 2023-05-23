@@ -9,10 +9,12 @@ class ActiveLearning:
         pass
 
     def iteration(self, classifier: sklearn.base.BaseEstimator,
-                  unlabeled_data: Union[list, np.ndarray, scipy.sparse.csr.csr_matrix],
+                  unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
         indices = uncertainty_sampling(classifier=classifier, X=unlabeled_data, n_instances=num_to_annotate)
         
-        #uncertain_samples = unlabeled_data[indices]
+        if isinstance(unlabeled_data, list):
+            unlabeled_data = np.array(unlabeled_data)
+        uncertain_samples = list(unlabeled_data[indices])
 
-        return indices
+        return uncertain_samples

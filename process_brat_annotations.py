@@ -1,10 +1,138 @@
 import os
-from Dataset import Dataset
+import numpy as np
 
+import pandas as pd
+from ActiveLearning import ActiveLearning
+from Dataset import Dataset
+from SciBertWordClassifier import SciBertWordClassifier
+from modAL import uncertainty
 from TextFile import TextFile
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from constants import COLLECTION_NAME, FILE_NAME, FOLDER_NAME, PATH_TO_BRAT
+
+def create_custom_dataset():
+    """
+    Creates a custom dataset with 50 drug names and 50 no-drug names.
+
+    Returns:
+        X (list): List of input word samples.
+        y (list): List of target labels (1 for drug, 0 for no-drug).
+    """
+    drug_names = [
+        "aspirin",
+        "ibuprofen",
+        "paracetamol",
+        "simvastatin",
+        "lisinopril",
+        "metformin",
+        "metoprolol",
+        "levothyroxine",
+        "amlodipine",
+        "atorvastatin",
+        "losartan",
+        "omeprazole",
+        "hydrochlorothiazide",
+        "rosuvastatin",
+        "warfarin",
+        "fluoxetine",
+        "pantoprazole",
+        "sertraline",
+        "gabapentin",
+        "citalopram",
+        "escitalopram",
+        "alprazolam",
+        "venlafaxine",
+        "amitriptyline",
+        "lorazepam",
+        "duloxetine",
+        "tramadol",
+        "clonazepam",
+        "oxycodone",
+        "phenytoin",
+        "carbamazepine",
+        "quetiapine",
+        "risperidone",
+        "trazodone",
+        "olanzapine",
+        "fluconazole",
+        "amoxicillin",
+        "azithromycin",
+        "doxycycline",
+        "clindamycin",
+        "cephalexin",
+        "sulfamethoxazole",
+        "amoxicillin-clavulanate",
+        "levofloxacin",
+        "ciprofloxacin",
+        "metronidazole",
+        "erythromycin",
+        "valacyclovir",
+        "acyclovir",
+        "methotrexate",
+        "adalimumab"
+    ]
+
+
+    no_drug_names = [
+        "apple",
+        "car",
+        "sun",
+        "book",
+        "tree",
+        "table",
+        "chair",
+        "computer",
+        "pen",
+        "phone",
+        "house",
+        "flower",
+        "dog",
+        "cat",
+        "bird",
+        "fish",
+        "mountain",
+        "river",
+        "ocean",
+        "sky",
+        "moon",
+        "star",
+        "cloud",
+        "grass",
+        "sand",
+        "rock",
+        "paper",
+        "scissors",
+        "glass",
+        "wood",
+        "metal",
+        "plastic",
+        "air",
+        "water",
+        "fire",
+        "earth",
+        "light",
+        "sound",
+        "time",
+        "energy",
+        "power",
+        "space",
+        "color",
+        "music",
+        "friend",
+        "love",
+        "life",
+        "smile",
+        "dream",
+        "hope"
+    ]
+
+
+    # Combine drug and no-drug names
+    X = drug_names + no_drug_names
+    y = [1] * len(drug_names) + [0] * len(no_drug_names)
+
+    return X, y
 
 if __name__ == "__main__":
     
@@ -61,3 +189,33 @@ if __name__ == "__main__":
     dataset = Dataset(path_to_collection=collection_path)
     dataset.to_json(collection_path, "test.jsonl")
     """
+
+    # Example usage of SciBertWordClassifier and ActiveLearning
+
+    num_classes = 2  # Drug and non-drug classes
+    classifier = SciBertWordClassifier(num_classes)
+
+    X_train, y_train = create_custom_dataset()
+
+    classifier.fit(X_train, y_train)
+
+    text = "The patient was prescribed aspirin for pain relief."
+
+    words = np.array(text.split())
+
+    predicted_labels = classifier.predict(words)
+
+    probabilities = classifier.predict_proba(words)
+
+    for word, label, probability in zip(words, predicted_labels, probabilities):
+        if label == 1:
+            print(f"Word: {word}, Class: Drug, Probability: {probability[1]}")
+        else:
+            print(f"Word: {word}, Class: Non-Drug, Probability: {probability[0]}")
+
+    learner = ActiveLearning()
+    uncertainty = uncertainty.classifier_uncertainty(classifier, words)
+    print(uncertainty)
+
+    uncertain_words = learner.iteration(classifier, words, 3)
+    print(uncertain_words)

@@ -191,31 +191,37 @@ if __name__ == "__main__":
     """
 
     # Example usage of SciBertWordClassifier and ActiveLearning
+    # ---------------------------------------------------------
 
-    num_classes = 2  # Drug and non-drug classes
-    classifier = SciBertWordClassifier(num_classes)
+    # num_classes = 2  # Drug and non-drug classes
+    # classifier = SciBertWordClassifier(num_classes)
 
-    X_train, y_train = create_custom_dataset()
+    # X_train, y_train = create_custom_dataset()
 
-    classifier.fit(X_train, y_train)
+    # classifier.fit(X_train, y_train)
 
-    text = "The patient was prescribed aspirin for pain relief."
+    # text = "The patient was prescribed aspirin for pain relief."
 
-    words = np.array(text.split())
+    # words = np.array(text.split())
 
-    predicted_labels = classifier.predict(words)
+    # predicted_labels = classifier.predict(words)
 
-    probabilities = classifier.predict_proba(words)
+    # probabilities = classifier.predict_proba(words)
 
-    for word, label, probability in zip(words, predicted_labels, probabilities):
-        if label == 1:
-            print(f"Word: {word}, Class: Drug, Probability: {probability[1]}")
-        else:
-            print(f"Word: {word}, Class: Non-Drug, Probability: {probability[0]}")
+    # for word, label, probability in zip(words, predicted_labels, probabilities):
+    #     if label == 1:
+    #         print(f"Word: {word}, Class: Drug, Probability: {probability[1]}")
+    #     else:
+    #         print(f"Word: {word}, Class: Non-Drug, Probability: {probability[0]}")
 
-    learner = ActiveLearning()
-    uncertainty = uncertainty.classifier_uncertainty(classifier, words)
-    print(uncertainty)
+    # learner = ActiveLearning()
+    # uncertainty = uncertainty.classifier_uncertainty(classifier, words)
+    # print(uncertainty)
 
-    uncertain_words = learner.iteration(classifier, words, 3)
-    print(uncertain_words)
+    # uncertain_words = learner.iteration(classifier, words, 3)
+    # print(uncertain_words)
+
+    ann_file = AnnotationFile("example.ann.txt", "C:\\Users\\albbl\\Documents\\Studium\\10_Semester\\Projekt\\")
+    anns = ann_file.read()
+    ann = Annotation("example.ann.txt", "drug", 5, 6, "test")
+    ann_file.add_annotations([ann])

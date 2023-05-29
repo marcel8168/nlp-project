@@ -1,4 +1,5 @@
-from typing import Optional
+import re
+from typing import Iterable, Optional
 
 import pandas as pd
 import nltk
@@ -70,3 +71,15 @@ class TextFile:
             
         return pd.DataFrame(data=sentence_info, columns=["sentence", "start", "end"])
     
+    def contains(self, excerpts: Iterable[str]) -> list:
+        if not self.text:
+            self.read()
+            
+        excerpt_infos = []
+        for excerpt in excerpts:
+            offset = len(excerpt)
+            for occ in re.finditer(pattern=excerpt, string=self.text):
+                start = occ.start()
+                excerpt_infos.append([excerpt, start, start + offset])
+        
+        return excerpt_infos

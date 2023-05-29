@@ -1,4 +1,5 @@
 import os
+import platform
 import numpy as np
 
 import pandas as pd
@@ -19,113 +20,113 @@ def create_custom_dataset():
         X (list): List of input word samples.
         y (list): List of target labels (1 for drug, 0 for no-drug).
     """
-    drug_names = [
-        "aspirin",
-        "ibuprofen",
-        "paracetamol",
-        "simvastatin",
-        "lisinopril",
-        "metformin",
-        "metoprolol",
-        "levothyroxine",
-        "amlodipine",
-        "atorvastatin",
-        "losartan",
-        "omeprazole",
-        "hydrochlorothiazide",
-        "rosuvastatin",
-        "warfarin",
-        "fluoxetine",
-        "pantoprazole",
-        "sertraline",
-        "gabapentin",
-        "citalopram",
-        "escitalopram",
-        "alprazolam",
-        "venlafaxine",
-        "amitriptyline",
-        "lorazepam",
-        "duloxetine",
-        "tramadol",
-        "clonazepam",
-        "oxycodone",
-        "phenytoin",
-        "carbamazepine",
-        "quetiapine",
-        "risperidone",
-        "trazodone",
-        "olanzapine",
-        "fluconazole",
-        "amoxicillin",
-        "azithromycin",
-        "doxycycline",
-        "clindamycin",
-        "cephalexin",
-        "sulfamethoxazole",
-        "amoxicillin-clavulanate",
-        "levofloxacin",
-        "ciprofloxacin",
-        "metronidazole",
-        "erythromycin",
-        "valacyclovir",
-        "acyclovir",
-        "methotrexate",
-        "adalimumab"
-    ]
+    # drug_names = [
+    #     "aspirin",
+    #     "ibuprofen",
+    #     "paracetamol",
+    #     "simvastatin",
+    #     "lisinopril",
+    #     "metformin",
+    #     "metoprolol",
+    #     "levothyroxine",
+    #     "amlodipine",
+    #     "atorvastatin",
+    #     "losartan",
+    #     "omeprazole",
+    #     "hydrochlorothiazide",
+    #     "rosuvastatin",
+    #     "warfarin",
+    #     "fluoxetine",
+    #     "pantoprazole",
+    #     "sertraline",
+    #     "gabapentin",
+    #     "citalopram",
+    #     "escitalopram",
+    #     "alprazolam",
+    #     "venlafaxine",
+    #     "amitriptyline",
+    #     "lorazepam",
+    #     "duloxetine",
+    #     "tramadol",
+    #     "clonazepam",
+    #     "oxycodone",
+    #     "phenytoin",
+    #     "carbamazepine",
+    #     "quetiapine",
+    #     "risperidone",
+    #     "trazodone",
+    #     "olanzapine",
+    #     "fluconazole",
+    #     "amoxicillin",
+    #     "azithromycin",
+    #     "doxycycline",
+    #     "clindamycin",
+    #     "cephalexin",
+    #     "sulfamethoxazole",
+    #     "amoxicillin-clavulanate",
+    #     "levofloxacin",
+    #     "ciprofloxacin",
+    #     "metronidazole",
+    #     "erythromycin",
+    #     "valacyclovir",
+    #     "acyclovir",
+    #     "methotrexate",
+    #     "adalimumab"
+    # ]
 
 
-    no_drug_names = [
-        "apple",
-        "car",
-        "sun",
-        "book",
-        "tree",
-        "table",
-        "chair",
-        "computer",
-        "pen",
-        "phone",
-        "house",
-        "flower",
-        "dog",
-        "cat",
-        "bird",
-        "fish",
-        "mountain",
-        "river",
-        "ocean",
-        "sky",
-        "moon",
-        "star",
-        "cloud",
-        "grass",
-        "sand",
-        "rock",
-        "paper",
-        "scissors",
-        "glass",
-        "wood",
-        "metal",
-        "plastic",
-        "air",
-        "water",
-        "fire",
-        "earth",
-        "light",
-        "sound",
-        "time",
-        "energy",
-        "power",
-        "space",
-        "color",
-        "music",
-        "friend",
-        "love",
-        "life",
-        "smile",
-        "dream",
-        "hope"
-    ]
+    # no_drug_names = [
+    #     "apple",
+    #     "car",
+    #     "sun",
+    #     "book",
+    #     "tree",
+    #     "table",
+    #     "chair",
+    #     "computer",
+    #     "pen",
+    #     "phone",
+    #     "house",
+    #     "flower",
+    #     "dog",
+    #     "cat",
+    #     "bird",
+    #     "fish",
+    #     "mountain",
+    #     "river",
+    #     "ocean",
+    #     "sky",
+    #     "moon",
+    #     "star",
+    #     "cloud",
+    #     "grass",
+    #     "sand",
+    #     "rock",
+    #     "paper",
+    #     "scissors",
+    #     "glass",
+    #     "wood",
+    #     "metal",
+    #     "plastic",
+    #     "air",
+    #     "water",
+    #     "fire",
+    #     "earth",
+    #     "light",
+    #     "sound",
+    #     "time",
+    #     "energy",
+    #     "power",
+    #     "space",
+    #     "color",
+    #     "music",
+    #     "friend",
+    #     "love",
+    #     "life",
+    #     "smile",
+    #     "dream",
+    #     "hope"
+    # ]
 
 
     # Combine drug and no-drug names
@@ -135,9 +136,10 @@ def create_custom_dataset():
     return X, y
 
 if __name__ == "__main__":
-    
-    collection_path = PATH_TO_BRAT + "/" + FOLDER_NAME + "/"
-    collection_path += COLLECTION_NAME + "/" if COLLECTION_NAME else ""
+    operating_system = platform.system()
+    slash = "\\" if operating_system == "Windows" else "/"
+    collection_path = PATH_TO_BRAT + slash + FOLDER_NAME + slash
+    collection_path += COLLECTION_NAME + slash if COLLECTION_NAME else ""
 
     """
     Reading all annotation files within a directory
@@ -221,7 +223,10 @@ if __name__ == "__main__":
     # uncertain_words = learner.iteration(classifier, words, 3)
     # print(uncertain_words)
 
-    ann_file = AnnotationFile("example.ann.txt", "C:\\Users\\albbl\\Documents\\Studium\\10_Semester\\Projekt\\")
-    anns = ann_file.read()
-    ann = Annotation("example.ann.txt", "drug", 5, 6, "test")
-    ann_file.add_annotations([ann])
+    # ann_file = AnnotationFile("example.ann", "C:\\Users\\albbl\\Documents\\Studium\\10_Semester\\Projekt\\")
+    # anns = ann_file.read()
+    # ann = Annotation("example.ann.txt", "drug", 5, 6, "test")
+    # ann_file.add_annotations([ann])
+
+    active_learn = ActiveLearning()
+    active_learn.add_samples_to_annotation_files(["case", "substring"])

@@ -29,15 +29,15 @@ class Annotation:
         """
         Create string with all attributes of the Annotation object.
 
-        Arguments:
+        Arguments
         ---------
             usage (str): Formats return string depending on usage.
 
-        Returns:
+        Returns
         -------
             str: Annotation object as string.
 
-        Raises:
+        Raises
         ------
             ValueError: If 'usage' is neither "annotation" nor "info".
 

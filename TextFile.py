@@ -72,6 +72,18 @@ class TextFile:
         return pd.DataFrame(data=sentence_info, columns=["sentence", "start", "end"])
     
     def contains(self, excerpts: Iterable[str]) -> list:
+        """
+        Get all occurrences of given excerpts in the TextFile object.
+
+        Arguments
+        ---------
+            excerpts (Iterable[str]): Excerpts that should be found in the TextFile object.
+
+        Returns
+        -------
+            list[str, int, int]: List of found excerpts with start index and end index.
+
+        """
         if not self.text:
             self.read()
             

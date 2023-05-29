@@ -7,15 +7,14 @@ import numpy as np
 class SciBertWordClassifier(BaseEstimator):
     """
     A scikit-learn compatible classifier that uses the SciBERT model for word-level sequence classification.
+
+    Attributes
+    ----------
+        tokenizer (BertTokenizer): Tokenizer
+        model (): SciBert Model for classification
     """
 
     def __init__(self, num_classes: int):
-        """
-        Initializes the SciBertWordClassifier.
-
-        Args:
-            num_classes (int): The number of classes for classification.
-        """
         self.tokenizer = BertTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
         self.model = BertForSequenceClassification.from_pretrained('allenai/scibert_scivocab_uncased', num_labels=num_classes)
 
@@ -45,11 +44,13 @@ class SciBertWordClassifier(BaseEstimator):
         """
         Fits the SciBertWordClassifier to the provided training data.
 
-        Args:
+        Arguments
+        ---------
             X (array-like of shape (n_samples,)): The input words.
             y (array-like of shape (n_samples,)): The target values.
 
-        Returns:
+        Returns
+        -------
             self
         """
         input_ids, attention_masks = self._encode_text_to_tensors(X=X, tokenizer=self.tokenizer, max_length=16)
@@ -82,10 +83,12 @@ class SciBertWordClassifier(BaseEstimator):
         """
         Predicts class probabilities for the input words.
 
-        Args:
+        Arguments
+        ---------
             X (array-like of shape (n_samples,)): The input words.
 
-        Returns:
+        Returns
+        -------
             list of shape (n_samples, n_classes): The class probabilities of the input words.
         """
         input_ids, attention_masks = self._encode_text_to_tensors(X=X, tokenizer=self.tokenizer, max_length=16)
@@ -107,10 +110,12 @@ class SciBertWordClassifier(BaseEstimator):
         """
         Predicts the class labels for the input words.
 
-        Args:
+        Arguments
+        ---------
             X (array-like of shape (n_samples,)): The input words.
 
-        Returns:
+        Returns
+        -------
             numpy.ndarray of shape (n_samples,): The predicted class labels.
         """
         probabilities = self.predict_proba(X)

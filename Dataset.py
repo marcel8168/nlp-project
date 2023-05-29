@@ -29,12 +29,12 @@ class Dataset:
         """
         Create a dataset object from files.
 
-        Arguments:
+        Arguments
         ---------
             annotation_files (list[AnnotationFile]): List of AnnotationFile objects.
             text_files (list[TextFile]): List of TextFile objects.
 
-        Returns:
+        Returns
         -------
             DataFrame: Dataset object.
 
@@ -68,11 +68,11 @@ class Dataset:
         """
         Create a dataset object from the collection path.
 
-        Arguments:
+        Arguments
         ---------
             path_to_collection (str): Path to the collection directory.
 
-        Returns:
+        Returns
         -------
             DataFrame: Dataset object.
 
@@ -96,7 +96,7 @@ class Dataset:
         """
         Convert the dataset object to a JSON-File.
 
-        Arguments:
+        Arguments
         ---------
             path (str): Path to the storage location.
             name (str): File name.

@@ -49,7 +49,7 @@ class AnnotationFile:
         """
         Write into the the annotation file object.
 
-        Arguments:
+        Arguments
         ---------
             annotations (Iterable[Anntation]): Iterable set of annotation objects
         """
@@ -67,7 +67,7 @@ class AnnotationFile:
         """
         Add annotations to the annotation file object.
 
-        Arguments:
+        Arguments
         ---------
             annotations (Iterable[Anntation]): Iterable set of annotation objects
         """

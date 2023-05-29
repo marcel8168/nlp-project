@@ -9,7 +9,7 @@ from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from TextFile import TextFile
 
-from constants import FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, ANNOTATION_TYPE
+from constants import FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE
 
 
 class ActiveLearning:
@@ -59,7 +59,7 @@ class ActiveLearning:
             annotation_file_name = file.file_name[:file.file_name.find(".")] + ".ann"
             for word_info in containing_words:
                 annotations.append(Annotation(file_name=annotation_file_name, 
-                                              type=ANNOTATION_TYPE, 
+                                              type=SUGGESTION_ANNOTATION_TYPE, 
                                               begin=word_info[1], 
                                               end=word_info[2], 
                                               excerpt=word_info[0]))

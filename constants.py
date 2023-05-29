@@ -1,5 +1,5 @@
 
-ANNOTATION_TYPE = "Drug"
+SUGGESTION_ANNOTATION_TYPE = "TO_BE_ANNOTATED"
 """
 PATH_TO_BRAT = "/home/linuxmint/Documents/Brat/brat-1.3p1"
 FOLDER_NAME = "data"

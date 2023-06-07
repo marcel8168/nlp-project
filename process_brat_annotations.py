@@ -6,12 +6,14 @@ import pandas as pd
 from ActiveLearning import ActiveLearning
 from Dataset import Dataset
 from SciBertWordClassifier import SciBertWordClassifier
+from SciBertClassifier import SciBertClassifier
 from modAL import uncertainty
 from TextFile import TextFile
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from constants import COLLECTION_NAME, FILE_NAME, FOLDER_NAME, PATH_TO_BRAT
 from data.drug_dataset import DRUG_NAMES, NO_DRUG_NAMES
+from datasets import load_dataset
 
 
 def create_custom_dataset():
@@ -89,7 +91,7 @@ if __name__ == "__main__":
 
     # Example usage of SciBertWordClassifier and ActiveLearning
     # ---------------------------------------------------------
-    
+    """
     num_classes = 2  # Drug and non-drug classes
     classifier = SciBertWordClassifier(num_classes)
 
@@ -117,7 +119,7 @@ if __name__ == "__main__":
 
     uncertain_words = learner.iteration(classifier, words, 3)
     print(uncertain_words)
-    
+    """
 
     # Test add_samples_to_annotation_files()
     # --------------------------------------
@@ -125,3 +127,19 @@ if __name__ == "__main__":
     active_learn = ActiveLearning()
     active_learn.add_samples_to_annotation_files(["case", "substring"])
     """
+
+    # Test SciBertClassifier
+    # ----------------------
+    cons_dataset = load_dataset("json", data_files="./notebooks/data/dataset.jsonl")
+    cons_dataset = cons_dataset["train"].train_test_split()
+
+    classifier = SciBertClassifier(3, "drug", ['O', 'B-drug', 'I-drug'])
+    labeled_dataset = cons_dataset.map(classifier.generate_row_labels)
+    classifier.fit(labeled_dataset)
+
+    learner = ActiveLearning()
+    uncertainty = uncertainty.classifier_uncertainty(classifier, ["I was treated with furosemid."])
+    print(uncertainty)
+
+    uncertain_words = learner.iteration(classifier, classifier.tokenizer, ["I was treated with furosemid."], 3)
+    print(uncertain_words)

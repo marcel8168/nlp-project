@@ -51,8 +51,8 @@ class ActiveLearning:
                     words.append(token)
 
         uncertain_samples = list(np.array(words)[indices])
-
-        return uncertain_samples
+        logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
+        self.add_samples_to_annotation_files(samples=uncertain_samples)
     
     def add_samples_to_annotation_files(self, samples: Iterable[str]):
         """

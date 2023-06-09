@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Iterable
 from os import path
 from Annotation import Annotation
@@ -59,7 +60,6 @@ class AnnotationFile:
             annotation_lines = [
                 ann.to_string(usage="annotation") for ann in annotations
             ]
-            annotation_lines[0] = "\n" + annotation_lines[0]
             file.writelines(annotation_lines)
         logging.info(f"Wrote into {self.path + self.file_name}:\n" + str([ann.to_string(usage="info") for ann in annotations]))
 
@@ -90,11 +90,11 @@ class AnnotationFile:
         else:
             new_annotations = annotations
 
-        highest_id_num = max(int(ann.id[1]) for ann in existing_annotations) if existing_annotations else 0
+        highest_id_num = max(int(re.search(r"\d+", ann.id).group()) for ann in existing_annotations) if existing_annotations else 0
         for annotation in new_annotations:
             if not annotation.id:
                 highest_id_num += 1 
                 annotation.id = "T" + str(highest_id_num)
-
-        self.write(new_annotations)
-        logging.info("Adding annotations.")
+        if new_annotations:
+            logging.info("Adding annotations.")
+            self.write(new_annotations)

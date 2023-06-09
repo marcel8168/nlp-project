@@ -1,3 +1,4 @@
+import platform
 import re
 from typing import Iterable, Optional
 
@@ -31,8 +32,11 @@ class TextFile:
         -------
             str: Content of the text file.
         """
-
-        with open(self.path + self.file_name, "r", encoding="utf8") as file:
+        operating_system = platform.system()
+        slash = "\\" if operating_system == "Windows" else "/"
+        full_path = self.path + slash + self.file_name
+        
+        with open(full_path, "r", encoding="utf8") as file:
             self.text = file.read()
             self.text.replace("'", '"')
 

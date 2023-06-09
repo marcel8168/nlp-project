@@ -1,7 +1,7 @@
 import platform
 import re
 from typing import Iterable, Optional
-
+import io
 import pandas as pd
 import nltk
 
@@ -35,8 +35,8 @@ class TextFile:
         operating_system = platform.system()
         slash = "\\" if operating_system == "Windows" else "/"
         full_path = self.path + slash + self.file_name
-        
-        with open(full_path, "r", encoding="utf8") as file:
+
+        with io.open(full_path, "r", encoding="utf8", newline='') as file:
             self.text = file.read()
             self.text.replace("'", '"')
 
@@ -93,9 +93,10 @@ class TextFile:
             
         excerpt_infos = []
         for excerpt in excerpts:
-            offset = len(excerpt)
-            for occ in re.finditer(pattern=excerpt, string=self.text):
-                start = occ.start()
-                excerpt_infos.append([excerpt, start, start + offset])
+            pattern = r"\b{}\b".format(excerpt)
+            matches = re.finditer(pattern, self.text)
+            for match in matches:
+                excerpt_infos.append([excerpt, match.start(), match.end()])
         
         return excerpt_infos
+    

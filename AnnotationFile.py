@@ -96,5 +96,5 @@ class AnnotationFile:
                 highest_id_num += 1 
                 annotation.id = "T" + str(highest_id_num)
         if new_annotations:
-            self.write(new_annotations)
             logging.info("Adding annotations.")
+            self.write(new_annotations)

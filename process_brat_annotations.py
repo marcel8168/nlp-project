@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 import numpy as np
@@ -125,11 +126,12 @@ if __name__ == "__main__":
     # --------------------------------------
     """
     active_learn = ActiveLearning()
-    active_learn.add_samples_to_annotation_files(["case", "substring"])
+    active_learn.add_samples_to_annotation_files(["Genetic"])
     """
 
     # Test SciBertClassifier
     # ----------------------
+    logging.basicConfig(filename='example.log', filemode='w', encoding='utf-8', level=logging.INFO)
     cons_dataset = load_dataset("json", data_files="./notebooks/data/dataset.jsonl")
     cons_dataset = cons_dataset["train"].train_test_split()
 
@@ -138,8 +140,7 @@ if __name__ == "__main__":
     classifier.fit(labeled_dataset)
 
     learner = ActiveLearning()
-    uncertainty = uncertainty.classifier_uncertainty(classifier, ["I was treated with furosemid."])
-    print(uncertainty)
-
-    uncertain_words = learner.iteration(classifier, classifier.tokenizer, ["I was treated with furosemid."], 3)
-    print(uncertain_words)
+    text_file = TextFile("36476732.txt", "doc")
+    test_text = text_file.read()
+    uncertain_words = learner.iteration(classifier, classifier.tokenizer, [test_text], 3)
+    

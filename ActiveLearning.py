@@ -20,39 +20,18 @@ class ActiveLearning:
     def __init__(self) -> None:
         pass
 
-    def iteration(self, classifier: sklearn.base.BaseEstimator, 
-                  tokenizer,
+    def iteration(self, classifier: sklearn.base.BaseEstimator,
                   unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
         indices = uncertainty_sampling(classifier=classifier, 
                                        X=unlabeled_data, 
                                        n_instances=num_to_annotate)
         
-        words = []
-        for text in unlabeled_data:
-            tokens = tokenizer(text, return_offsets_mapping=True)
-            orig = tokenizer.convert_ids_to_tokens(tokens["input_ids"])
-            whole_word = ""
-            num_word_parts = 0
-
-            for idx, token in enumerate(orig):
-                offset_start, offset_end = tokens["offset_mapping"][idx]
-                if offset_end - offset_start == 0:
-                    continue
-                elif token.startswith("##"):
-                    whole_word += token[2:]
-                    num_word_parts += 1
-                else:
-                    if num_word_parts > 1:
-                        words[-1] = whole_word
-                
-                    whole_word = token
-                    num_word_parts = 1
-                    words.append(token)
-
-        uncertain_samples = list(np.array(words)[indices])
+        predictions = classifier.predictions.flatten()
+        uncertain_samples = list(predictions[indices])
         logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
-        self.add_samples_to_annotation_files(samples=uncertain_samples)
+        suggested_samples = [sample["word"] for sample in uncertain_samples]
+        self.add_samples_to_annotation_files(samples=suggested_samples)
     
     def add_samples_to_annotation_files(self, samples: Iterable[str]):
         """

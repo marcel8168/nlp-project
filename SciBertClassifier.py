@@ -186,9 +186,10 @@ class SciBertClassifier(BaseEstimator):
         """
         ner_pipeline = pipeline(task="ner", model=self.model, tokenizer=self.tokenizer, device=-1)
         predictions = [self.whole_word_prediction(input=ner_pipeline(text), aggregation_strategy="max") for text in X]
+        self.predictions = np.array([[word for word in prediction if word["word"].isalnum()] for prediction in predictions])
 
-        return np.array(predictions)
-    
+        return self.predictions
+
     def whole_word_prediction(self, input: list, aggregation_strategy: str = "max") -> list:
         """
         Perform whole word prediction by aggregating probabilities for split-up words.

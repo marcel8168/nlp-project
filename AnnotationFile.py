@@ -74,7 +74,7 @@ class AnnotationFile:
         existing_annotations = self.read()
 
         if existing_annotations:
-            new_annotations = [
+            new_annotations = {
                 annotation
                 for annotation in annotations
                 if (
@@ -86,9 +86,9 @@ class AnnotationFile:
                         for existing_annotation in existing_annotations
                     )
                 )
-            ]
+            }
         else:
-            new_annotations = annotations
+            new_annotations = set(annotations)
 
         highest_id_num = max(int(re.search(r"\d+", ann.id).group()) for ann in existing_annotations) if existing_annotations else 0
         for annotation in new_annotations:

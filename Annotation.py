@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class Annotation:
     """
     The Annotation object contains information regarding a text annotation.
@@ -13,7 +16,7 @@ class Annotation:
     """
 
     def __init__(
-        self, file_name: str, id: str, type: str, begin: int, end: int, excerpt: str
+        self, file_name: str, type: str, begin: int, end: int, excerpt: str, id: Optional[str] = None
     ) -> None:
         self.file_name = file_name
         self.id = id
@@ -26,15 +29,15 @@ class Annotation:
         """
         Create string with all attributes of the Annotation object.
 
-        Arguments:
+        Arguments
         ---------
             usage (str): Formats return string depending on usage.
 
-        Returns:
+        Returns
         -------
             str: Annotation object as string.
 
-        Raises:
+        Raises
         ------
             ValueError: If 'usage' is neither "annotation" nor "info".
 

@@ -1,5 +1,7 @@
+import logging
+import re
 from typing import Iterable
-
+from os import path
 from Annotation import Annotation
 
 
@@ -25,20 +27,22 @@ class AnnotationFile:
         -------
             set[Annotation]: Set of Annotation objects.
         """
-
-        with open(self.path + self.file_name, "r", encoding="utf8") as file:
-            lines = [line for line in file.readlines() if line.startswith("T")]
-            annotation_lines = [
-                Annotation(
-                    self.file_name,
-                    line.split()[0],
-                    line.split()[1],
-                    int(line.split()[2]),
-                    int(line.split()[3]),
-                    line.split()[4],
-                )
-                for line in lines
-            ]
+        annotation_lines = []
+        full_path = self.path + self.file_name
+        if path.exists(full_path):
+            with open(full_path, "r", encoding="utf8") as file:
+                lines = [line for line in file.readlines() if line.startswith("T")]
+                annotation_lines = [
+                    Annotation(
+                        file_name=self.file_name,
+                        id=line.split()[0],
+                        type=line.split()[1],
+                        begin=int(line.split()[2]),
+                        end=int(line.split()[3]),
+                        excerpt=line.split()[4],
+                    )
+                    for line in lines
+                ]
 
         return annotation_lines
 
@@ -46,12 +50,51 @@ class AnnotationFile:
         """
         Write into the the annotation file object.
 
-        Arguments:
+        Arguments
         ---------
             annotations (Iterable[Anntation]): Iterable set of annotation objects
         """
-        with open(self.path + self.file_name, "w", encoding="utf8") as file:
+        full_path = self.path + self.file_name
+
+        with open(full_path, "a", encoding="utf8") as file:
             annotation_lines = [
                 ann.to_string(usage="annotation") for ann in annotations
             ]
             file.writelines(annotation_lines)
+        logging.info(f"Wrote into {self.path + self.file_name}:\n" + str([ann.to_string(usage="info") for ann in annotations]))
+
+    def add_annotations(self, annotations: Iterable[Annotation]) -> None:
+        """
+        Add annotations to the annotation file object.
+
+        Arguments
+        ---------
+            annotations (Iterable[Anntation]): Iterable set of annotation objects
+        """
+        existing_annotations = self.read()
+
+        if existing_annotations:
+            new_annotations = {
+                annotation
+                for annotation in annotations
+                if (
+                    annotation.id not in {ann.id for ann in existing_annotations} and
+                    not any(
+                        (annotation.begin >= existing_annotation.begin and annotation.begin <= existing_annotation.end) or
+                        (annotation.end >= existing_annotation.begin and annotation.end <= existing_annotation.end) or
+                        (annotation.begin <= existing_annotation.begin and annotation.end >= existing_annotation.end)
+                        for existing_annotation in existing_annotations
+                    )
+                )
+            }
+        else:
+            new_annotations = set(annotations)
+
+        highest_id_num = max(int(re.search(r"\d+", ann.id).group()) for ann in existing_annotations) if existing_annotations else 0
+        for annotation in new_annotations:
+            if not annotation.id:
+                highest_id_num += 1 
+                annotation.id = "T" + str(highest_id_num)
+        if new_annotations:
+            logging.info("Adding annotations.")
+            self.write(new_annotations)

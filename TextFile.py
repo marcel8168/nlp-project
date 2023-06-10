@@ -1,5 +1,7 @@
-from typing import Optional
-
+import platform
+import re
+from typing import Iterable, Optional
+import io
 import pandas as pd
 import nltk
 
@@ -30,8 +32,11 @@ class TextFile:
         -------
             str: Content of the text file.
         """
+        operating_system = platform.system()
+        slash = "\\" if operating_system == "Windows" else "/"
+        full_path = self.path + slash + self.file_name
 
-        with open(self.path + self.file_name, "r", encoding="utf8") as file:
+        with io.open(full_path, "r", encoding="utf8", newline='') as file:
             self.text = file.read()
             self.text.replace("'", '"')
 
@@ -69,4 +74,29 @@ class TextFile:
                 raise Exception(f"Sentence '{sentence}' not found.")
             
         return pd.DataFrame(data=sentence_info, columns=["sentence", "start", "end"])
+    
+    def contains(self, excerpts: Iterable[str]) -> list:
+        """
+        Get all occurrences of given excerpts in the TextFile object.
+
+        Arguments
+        ---------
+            excerpts (Iterable[str]): Excerpts that should be found in the TextFile object.
+
+        Returns
+        -------
+            list[str, int, int]: List of found excerpts with start index and end index.
+
+        """
+        if not self.text:
+            self.read()
+            
+        excerpt_infos = []
+        for excerpt in excerpts:
+            pattern = r"\b{}\b".format(excerpt)
+            matches = re.finditer(pattern, self.text)
+            for match in matches:
+                excerpt_infos.append([excerpt, match.start(), match.end()])
+        
+        return excerpt_infos
     

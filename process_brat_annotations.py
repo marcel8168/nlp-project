@@ -142,5 +142,5 @@ if __name__ == "__main__":
     learner = ActiveLearning()
     text_file = TextFile("36476732.txt", "doc")
     test_text = text_file.read()
-    uncertain_words = learner.iteration(classifier, classifier.tokenizer, [test_text], 3)
+    uncertain_words = learner.iteration(classifier, [test_text], 3)
     

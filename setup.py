@@ -13,20 +13,15 @@ setup(
     description="NLP-Project @FAU",
     long_description=long_description,
     install_requires=[
-        datasets==2.12.0,
-        evaluate==0.4.0,
-        modAL==0.4.1,
-        modAL==0.49.2348,
-        nltk==3.8.1,
-        numpy==1.23.5,
-        pandas==2.0.1,
-        scikit_learn==1.2.2,
-        setuptools==65.5.0,
-        setuptools==67.7.2,
-        setuptools==67.8.0,
-        torch==2.0.0,
-        torch==2.0.1,
-        transformers==4.28.1,
-        transformers==4.29.1
+        'datasets==2.12.0',
+        'evaluate==0.4.0',
+        'modAL==0.49.2348',
+        'nltk==3.8.1',
+        'numpy==1.23.5',
+        'pandas==2.0.1',
+        'scikit_learn==1.2.2',
+        'setuptools==67.8.0',
+        'torch==2.0.1',
+        'transformers==4.29.1'
     ]
 )

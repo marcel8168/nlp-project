@@ -1,22 +1,71 @@
 import statistics
-from typing import Iterable
+from typing import Iterable, Optional
 import evaluate
+from joblib import dump, load
 from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline
 from sklearn.base import BaseEstimator
 import numpy as np
+from datasets import Dataset
 
 
 class SciBertClassifier(BaseEstimator):
     """
     A scikit-learn compatible classifier that uses the SciBERT model for token classification.
 
-    Attributes
-    ----------
-        tokenizer (BertTokenizer): Tokenizer
-        model (): SciBert Model for classification
+    Arguments
+    ---------
+        label (str): The label for the target class.
+        label_list (List[str]): The list of all possible labels.
+        num_classes (int): The number of classes for classification.
+        path (str, optional): The path to save/load the model. Defaults to None.
+        learning_rate (float, optional): The learning rate for model training. Defaults to 5e-5.
+        batch_size (int, optional): The batch size for training. Defaults to 32.
+        num_epochs (int, optional): The number of training epochs. Defaults to 3.
+        weight_decay (float, optional): The weight decay for training. Defaults to 0.01.
+        logging_steps (int, optional): The frequency of logging during training. Defaults to 100.
+
+    Public Variables
+    ----------------
+        metric (object): An evaluation metric object for sequence labeling, loaded from the "seqeval" library.
+        model_checkpoint (str): The checkpoint name or path of the SciBERT model.
+        model_name (str): The name of the loaded SciBERT model.
+        task (str): The task type, set to "ner" for named entity recognition.
+        label (str): The label for the target class.
+        label_list (List[str]): The list of all possible labels.
+        tokenizer (object): The tokenizer object for the SciBERT model.
+        model (object): The token classification model based on the SciBERT architecture.
+        path (str): The path to save/load the model.
+        args (object): Training arguments for fine-tuning the model.
+        data_collator (object): Data collator object for token classification.
+
+    Methods
+    -------
+        fit(X) -> BaseEstimator:
+        Trains the model on the given input and target data.
+
+        predict(X) -> Iterable:
+            Predicts the class labels for the input text.
+
+        predict_proba(X) -> Iterable:
+            Predicts the class probabilities for the input text.
+
+        generate_row_labels(text: dict) -> dict:
+            Generates row labels (token labels) for a given text.
+
+        compute_metrics(p) -> dict:
+            Computes evaluation metrics based on the predictions and labels.
+
+        whole_word_prediction(input: list, aggregation_strategy: str = "max") -> list:
+            Perform whole word prediction by aggregating probabilities for split-up words.
+
+        save(path: Optional[str]):
+            Saves the model to the specified path.
+
+        load(path: Optional[str]):
+            Loads a saved model from the specified path.
     """
 
-    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1):
+    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1, path=""):
         self.metric = evaluate.load("seqeval")
         
         self.model_checkpoint = "allenai/scibert_scivocab_uncased"
@@ -28,6 +77,8 @@ class SciBertClassifier(BaseEstimator):
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_checkpoint)
         self.model = AutoModelForTokenClassification.from_pretrained(self.model_checkpoint, num_labels=num_classes)
+
+        self.path = path if path else "../model/SciBertClassifier.joblib" #change after test
 
         self.args = TrainingArguments(
             f"{self.model_name}-finetuned-{self.task}",
@@ -41,6 +92,32 @@ class SciBertClassifier(BaseEstimator):
         )
 
         self.data_collator = DataCollatorForTokenClassification(self.tokenizer)
+
+    def load(self, path: Optional[str] = "") -> None:
+        """
+        Loads a saved SciBertClassifier model from the specified path.
+
+        Arguments
+        ---------
+            path (str, optional): The path to the saved model file. If not provided, uses the default path.
+
+        Returns
+        -------
+            BaseEstimator: The loaded BaseEstimator model.
+        """
+        path = path if path else self.path
+        self.model = load(path)
+    
+    def save(self, path: Optional[str] = "") -> None:
+        """
+        Saves the SciBertClassifier model to the specified path.
+
+        Parameters
+        ----------
+            path (str, optional): The path to save the model file. If not provided, uses the default path.
+        """
+        path = path if path else self.path
+        dump(self.model, path)
 
     def generate_row_labels(self, text: dict) -> dict:
         """
@@ -88,7 +165,7 @@ class SciBertClassifier(BaseEstimator):
         
         return tokens
     
-    def compute_metrics(self, p):
+    def compute_metrics(self, p) -> dict:
         """
         Computes evaluation metrics based on the predictions and labels.
 
@@ -124,7 +201,7 @@ class SciBertClassifier(BaseEstimator):
             "accuracy": results["overall_accuracy"],
         }
 
-    def fit(self, X) -> BaseEstimator:
+    def fit(self, X: Dataset) -> BaseEstimator:
         """
         Fits the model to the training data and performs training.
 
@@ -231,5 +308,3 @@ class SciBertClassifier(BaseEstimator):
                 probabilities[-1]["index"] = index
 
         return probabilities
-
-

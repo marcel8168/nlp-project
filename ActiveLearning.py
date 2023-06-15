@@ -25,7 +25,7 @@ class ActiveLearning:
     def __init__(self):
         pass
 
-    def     iteration(self, classifier: sklearn.base.BaseEstimator,
+    def iteration(self, classifier: sklearn.base.BaseEstimator,
                   unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
         gui = GUI()

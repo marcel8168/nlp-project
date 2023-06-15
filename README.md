@@ -8,7 +8,6 @@ This is a project in the context of my master's program at the Friedrich-Alexand
 ```
 pip install nlp_project
 docker compose up
-open http://localhost:8001/
 python start.py --label {target_label} --label_list {labels}
 ```
 

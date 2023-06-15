@@ -23,6 +23,7 @@ class SciBertClassifier(BaseEstimator):
         num_epochs (int, optional): The number of training epochs. Defaults to 3.
         weight_decay (float, optional): The weight decay for training. Defaults to 0.01.
         logging_steps (int, optional): The frequency of logging during training. Defaults to 100.
+        token_aggregation (str, optional): Aggregation method for calculating the probability of split words.
 
     Public Variables
     ----------------
@@ -65,7 +66,7 @@ class SciBertClassifier(BaseEstimator):
             Loads a saved model from the specified path.
     """
 
-    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1, path=""):
+    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1, path="", token_aggregation=""):
         self.metric = evaluate.load("seqeval")
         
         self.model_checkpoint = "allenai/scibert_scivocab_uncased"
@@ -79,6 +80,8 @@ class SciBertClassifier(BaseEstimator):
         self.model = AutoModelForTokenClassification.from_pretrained(self.model_checkpoint, num_labels=num_classes)
 
         self.path = path if path else "./model/SciBertClassifier.joblib"
+
+        self.token_aggregation = token_aggregation
 
         self.args = TrainingArguments(
             f"{self.model_name}-finetuned-{self.task}",
@@ -285,6 +288,9 @@ class SciBertClassifier(BaseEstimator):
         whole_word = ""
         whole_word_probabilities = []
         index = -1
+
+        if self.token_aggregation:
+            aggregation_strategy = aggregation_strategy if aggregation_strategy != "max" else self.token_aggregation
     
         for data in input:
             token_probability = data["score"]

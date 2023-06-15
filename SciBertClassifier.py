@@ -78,7 +78,7 @@ class SciBertClassifier(BaseEstimator):
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_checkpoint)
         self.model = AutoModelForTokenClassification.from_pretrained(self.model_checkpoint, num_labels=num_classes)
 
-        self.path = path if path else "../model/SciBertClassifier.joblib" #change after test
+        self.path = path if path else "./model/SciBertClassifier.joblib"
 
         self.args = TrainingArguments(
             f"{self.model_name}-finetuned-{self.task}",

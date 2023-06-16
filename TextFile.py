@@ -91,12 +91,12 @@ class TextFile:
         if not self.text:
             self.read()
             
-        excerpt_infos = []
+        excerpt_infos = set()
         for excerpt in excerpts:
             pattern = r"\b{}\b".format(excerpt)
             matches = re.finditer(pattern, self.text)
             for match in matches:
-                excerpt_infos.append([excerpt, match.start(), match.end()])
+                excerpt_infos.add((excerpt, match.start(), match.end()))
         
-        return excerpt_infos
+        return list(excerpt_infos)
     

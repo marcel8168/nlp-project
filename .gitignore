@@ -159,6 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# notebook runs
+# notebook
 notebooks/scibert_scivocab_uncased-finetuned-ner/runs
 scibert_scivocab_uncased-finetuned-ner/runs
+events.out.tfevents*
+.stats_cache

@@ -83,7 +83,9 @@ if __name__ == "__main__":
                 texts.append(TextFile(file_name=file_name, path=path_to_collection).read())
 
         classifier = SciBertClassifier(num_classes=args.num_suggestions, label=args.label, label_list=args.label_list, token_aggregation=args.token_aggregation)
-        classifier.load()
+        _, file_names = system.get_file_names_from_path(path_to_brat="./model", folder_name=None)
+        if file_names:
+            classifier.load()
         url = "http://localhost:8001/index.xhtml#/"
         url += args.collection + "/" if args.collection else ""
         url += args.folder + "/" if args.folder else ""

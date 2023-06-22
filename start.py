@@ -68,9 +68,12 @@ if __name__ == "__main__":
         
         args = parser.parse_args()
 
+        system = System()
+        system.set_constant_value(constant_name="TARGET_CLASS", value=args.label)
+
         add_to_config("config/annotation.conf", "entities", [SUGGESTION_ANNOTATION_TYPE, args.label, "no-" + args.label])
         add_to_config("config/visual.conf", "labels", [SUGGESTION_ANNOTATION_TYPE + " | Annotation suggestion | TBA", args.label + " | " + args.label + " name | " + args.label[:2], "no-" + args.label + " | " + "no-" + args.label + " | no" + args.label[0]])
-        system = System()
+
         system.start_docker()
         
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=args.path, folder_name=args.folder, collection_name=args.collection)

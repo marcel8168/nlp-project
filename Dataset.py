@@ -3,6 +3,7 @@ from typing import Optional
 
 import pandas as pd
 from AnnotationFile import AnnotationFile
+from System import System
 from TextFile import TextFile
 
 
@@ -39,8 +40,9 @@ class Dataset:
             DataFrame: Dataset object.
 
         """
-        annotation_lists = [file.read() for file in annotation_files]
-        annotation_lists = filter(None, annotation_lists)
+        sys = System()
+        target_class = sys.get_constant(constant_name="TARGET_CLASS")
+
         dataset = []
         for text_file in text_files:
             annotation_file = list(filter(lambda file: file.file_name[:-4] == text_file.file_name[:-4], annotation_files))[0]

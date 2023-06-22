@@ -20,7 +20,7 @@ class GUI:
 
         text_length = len(message)
         width = min(400, 20 * text_length)
-        height = min(200, 30 * (text_length // 50 + 1)) + 50
+        height = min(200, 30 * (text_length // 50 + 1)) + 100
         popup.geometry(f"{width}x{height}")
 
         label = tkinter.Label(popup, text=message, padx=20, pady=20, anchor="w")

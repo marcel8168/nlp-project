@@ -1,3 +1,4 @@
+import os
 import statistics
 from typing import Iterable, Optional
 import evaluate
@@ -120,6 +121,9 @@ class SciBertClassifier(BaseEstimator):
             path (str, optional): The path to save the model file. If not provided, uses the default path.
         """
         path = path if path else self.path
+        dir = os.path.dirname(path)
+        if not os.path.isdir(dir):
+            os.mkdir(dir)
         dump(self.model, path)
 
     def generate_row_labels(self, text: dict) -> dict:

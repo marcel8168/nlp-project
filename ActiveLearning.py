@@ -1,7 +1,6 @@
 import logging
 import os
 import time
-import pyautogui
 from typing import Iterable, Union
 from modAL.uncertainty import uncertainty_sampling
 import sklearn
@@ -36,7 +35,7 @@ class ActiveLearning:
                                        n_instances=num_to_annotate)
         
         predictions = classifier.predictions.flatten()
-        uncertain_samples = list(predictions[indices])
+        uncertain_samples = list(predictions[indices[0]])
         logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
         suggested_samples = [sample["word"] for sample in uncertain_samples]
         self.add_samples_to_annotation_files(samples=suggested_samples)
@@ -44,7 +43,6 @@ class ActiveLearning:
         title = "Suggestions loaded"
         message = "Suggestions has been loaded.\nYou can now start annotating."
         gui.show_custom_popup(title, message)
-        pyautogui.hotkey('f5')
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         

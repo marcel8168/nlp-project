@@ -1,7 +1,9 @@
+import importlib
 import os
 import platform
 import subprocess
 from typing import Optional, Tuple
+import constants
 
 
 class System:
@@ -9,7 +11,7 @@ class System:
         self.operating_system = platform.system()
         pass
         
-    def get_file_names_from_path(self, path_to_brat: str, folder_name: str, collection_name: Optional[str]) -> Tuple[str, list[str]]:
+    def get_file_names_from_path(self, path_to_brat: str, folder_name: Optional[str] = None, collection_name: Optional[str] = None) -> Tuple[str, list[str]]:
         """
         Retrieves the file names from a specified path in the file system.
 
@@ -27,10 +29,10 @@ class System:
                                 of the files within the collection path.
         """
         slash = "\\" if self.operating_system.lower() == "windows" else "/"
-        collection_path = path_to_brat + slash + folder_name + slash
+        collection_path = path_to_brat + slash + folder_name + slash if folder_name else path_to_brat
         collection_path += collection_name + slash if collection_name else ""
-
-        return collection_path, os.listdir(collection_path)
+        file_names = os.listdir(collection_path) if os.path.isdir(collection_path) else []
+        return collection_path, file_names
     
     def start_docker(self) -> None:
         try:
@@ -42,3 +44,53 @@ class System:
                 subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "docker compose up"'], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
+
+    def get_constant(self, constant_name: str) -> str:
+        """
+        Retrieve the value of a constant from the `constants.py` file.
+
+        Arguments
+        ---------
+            constant_name (str): The name of the constant.
+
+        Returns
+        -------
+            str: The value of the constant.
+
+        Raises
+        ------
+            AttributeError: If the constant does not exist in `constants.py`.
+        """
+        spec = importlib.util.spec_from_file_location("constants", "constants.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        if hasattr(module, constant_name):
+            constant_value = getattr(module, constant_name)
+            return constant_value
+        else:
+            raise AttributeError(f"Constant '{constant_name}' does not exist in constants.py")
+
+    def set_constant_value(self, constant_name, value) -> None:
+        """
+        Save a value into a constant in the `constants.py` file.
+
+        Arguments
+        ---------
+            constant_name (str): The name of the constant.
+            value (object): The value to be assigned to the constant.
+
+        Raises
+        ------
+            AttributeError: If the constant does not exist in `constants.py`.
+        """
+        if hasattr(constants, constant_name):
+            setattr(constants, constant_name, value)
+        else:
+            raise AttributeError(f"Constant '{constant_name}' does not exist in constants.py")
+
+        # Save the updated module to the file
+        with open('constants.py', 'w') as file:
+            for name, val in constants.__dict__.items():
+                if not name.startswith('__'):
+                    file.write(f"{name} = {repr(val)}\n")

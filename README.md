@@ -6,7 +6,7 @@ This is a project in the context of my master's program at the Friedrich-Alexand
 ## Setup
 
 ```
-pip install nlp_project
+pip install .
 python start.py --label {target_label} --label_list {labels}
 ```
 

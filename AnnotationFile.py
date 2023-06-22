@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Iterable
+from typing import Iterable, Optional
 from os import path
 from Annotation import Annotation
 
@@ -19,20 +19,24 @@ class AnnotationFile:
         self.file_name = file_name
         self.path = path
 
-    def read(self) -> list[Annotation]:
+    def read(self, filter: Optional[str] = None) -> list[Annotation]:
         """
         Read the content of the annotation file object.
+        
+        Arguments
+        ----------
+            filter (Optional[str]): The type of annotations to filter. If provided, only Annotation objects with a matching type will be included in the returned list. (default: None)
 
         Returns
         -------
-            set[Annotation]: Set of Annotation objects.
+            annotations (set[Annotation]): Set of Annotation objects.
         """
-        annotation_lines = []
+        annotations = []
         full_path = self.path + self.file_name
         if path.exists(full_path):
             with open(full_path, "r", encoding="utf8") as file:
                 lines = [line for line in file.readlines() if line.startswith("T")]
-                annotation_lines = [
+                annotations = [
                     Annotation(
                         file_name=self.file_name,
                         id=line.split()[0],
@@ -42,9 +46,10 @@ class AnnotationFile:
                         excerpt=line.split()[4],
                     )
                     for line in lines
+                    if filter is None or line.split()[1] == filter
                 ]
 
-        return annotation_lines
+        return annotations
 
     def write(self, annotations: Iterable[Annotation]) -> None:
         """

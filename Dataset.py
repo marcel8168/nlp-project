@@ -44,7 +44,7 @@ class Dataset:
         dataset = []
         for text_file in text_files:
             annotation_file = list(filter(lambda file: file.file_name[:-4] == text_file.file_name[:-4], annotation_files))[0]
-            annotations = annotation_file.read()
+            annotations = annotation_file.read(filter=target_class)
             sentence_info = text_file.get_sentence_info()
             if annotations and not sentence_info.empty:
                 for idx in sentence_info.index:

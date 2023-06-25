@@ -39,7 +39,7 @@ class System:
             if self.operating_system.lower() == "windows":
                 subprocess.Popen(['start', 'cmd', '/c', 'docker compose up'], shell=True)
             elif self.operating_system.lower() == "linux":
-                subprocess.Popen(['x-terminal-emulator', '-e', 'bash', '-c', 'docker compose up'])
+                subprocess.Popen(['docker', 'compose', 'up'])
             elif self.operating_system.lower() == "darwin":
                 subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "docker compose up"'], check=True)
         except subprocess.CalledProcessError as e:

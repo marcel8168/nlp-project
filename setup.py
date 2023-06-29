@@ -25,6 +25,7 @@ setup(
         'torch==2.0.1',
         'transformers==4.29.1',
         'seqeval==1.2.2',
-        'accelerate==0.20.3'
+        'accelerate==0.20.3',
+        'flask==2.3.2'
     ]
 )

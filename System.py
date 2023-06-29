@@ -37,11 +37,11 @@ class System:
     def start_docker(self) -> None:
         try:
             if self.operating_system.lower() == "windows":
-                subprocess.Popen(['start', 'cmd', '/c', 'docker compose up'], shell=True)
+                subprocess.Popen(['start', 'cmd', '/c', 'nohup docker compose up > docker.txt 2>&1 &'], shell=True)
             elif self.operating_system.lower() == "linux":
-                subprocess.Popen(['docker', 'compose', 'up'])
+                subprocess.Popen(['nohup', 'docker', 'compose', 'up', '>', 'flask.txt', '2>&1', '&'])
             elif self.operating_system.lower() == "darwin":
-                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "docker compose up"'], check=True)
+                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "nohup docker compose up > flask.txt 2>&1 &"'], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
 
@@ -98,10 +98,10 @@ class System:
     def start_flask(self) -> None:
         try:
             if self.operating_system.lower() == "windows":
-                subprocess.Popen(['start', 'cmd', '/c', 'flask --app app.py run'], shell=True)
+                subprocess.Popen(['start', 'cmd', '/c', 'nohup flask --app app.py run > flask.txt 2>&1 &'], shell=True)
             elif self.operating_system.lower() == "linux":
-                subprocess.Popen(['flask', '--app', 'app.py', 'run'])
+                subprocess.Popen(['nohup', 'flask', '--app', 'app.py', 'run', '>', 'flask.txt', '2>&1', '&'])
             elif self.operating_system.lower() == "darwin":
-                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "flask --app app.py run"'], check=True)
+                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "nohup python flask --app app.py run > flask.txt 2>&1 &"'], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")

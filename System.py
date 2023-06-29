@@ -94,3 +94,14 @@ class System:
             for name, val in constants.__dict__.items():
                 if not name.startswith('__'):
                     file.write(f"{name} = {repr(val)}\n")
+
+    def start_flask(self) -> None:
+        try:
+            if self.operating_system.lower() == "windows":
+                subprocess.Popen(['start', 'cmd', '/c', 'flask --app app.py run'], shell=True)
+            elif self.operating_system.lower() == "linux":
+                subprocess.Popen(['flask', '--app', 'app.py', 'run'])
+            elif self.operating_system.lower() == "darwin":
+                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "flask --app app.py run"'], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")

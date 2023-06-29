@@ -13,7 +13,7 @@ def annotation_begin():
 
 @app.route('/annotation_end')
 def annotation_end():
-    return render_template('annotation_ned.html')
+    return render_template('annotation_end.html')
 
 if __name__ == '__main__':
     app.run()

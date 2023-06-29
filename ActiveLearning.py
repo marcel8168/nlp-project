@@ -2,6 +2,7 @@ import logging
 import os
 import time
 from typing import Iterable, Union
+import webbrowser
 from modAL.uncertainty import uncertainty_sampling
 import sklearn
 import numpy as np
@@ -40,18 +41,20 @@ class ActiveLearning:
         suggested_samples = [sample["word"] for sample in uncertain_samples]
         self.add_samples_to_annotation_files(samples=suggested_samples)
 
-        title = "Suggestions loaded"
-        message = "Suggestions has been loaded.\nYou can now start annotating."
-        gui.show_custom_popup(title, message)
+        webbrowser.open("http://localhost:5000/annotation_begin")
+        # title = "Suggestions loaded"
+        # message = "Suggestions has been loaded.\nYou can now start annotating."
+        # gui.show_custom_popup(title, message)
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         
         while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
             self.check_file_change(path=path_to_collection, file_names=file_names)
         logging.info("Annotation by domain expert finished. No suggestions left.")
-        title = "Annotation finished"
-        message = "You finished the current annotation step.\nNow the next training iteration began.\nPlease do not change any file until the next call."
-        gui.show_custom_popup(title, message)
+        webbrowser.open("http://localhost:5000/annotation_end")
+        # title = "Annotation finished"
+        # message = "You finished the current annotation step.\nNow the next training iteration began.\nPlease do not change any file until the next call."
+        # gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)
         storage_path = "./data/" 

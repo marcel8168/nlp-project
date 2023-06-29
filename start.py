@@ -86,9 +86,10 @@ if __name__ == "__main__":
         _, file_names = system.get_file_names_from_path(path_to_brat="./model", folder_name=None)
         if file_names:
             classifier.load()
-        url = "http://localhost:8001/index.xhtml#/"
-        url += args.collection + "/" if args.collection else ""
-        url += args.folder + "/" if args.folder else ""
+        system.start_flask()
+        url = "http://localhost:5000"
+        # url += args.collection + "/" if args.collection else ""
+        # url += args.folder + "/" if args.folder else ""
         webbrowser.open(url)
 
         active_learner = ActiveLearning()

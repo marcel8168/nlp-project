@@ -21,6 +21,7 @@ The following command line options are available for this application:
 - `--folder FOLDER`: Name of the destination folder (default: FOLDER_NAME).
 - `--num_suggestions NUM`: Number of suggestions to be made by the Active Learning functionality (default: 3).
 - `--token_aggregation TOKEN_AGGREGATION`: Strategy used for token probability aggregation (default: max).
+- `--iterations NUM`: Number of active learning iterations (default: 10).
 
 
 ## Contribution

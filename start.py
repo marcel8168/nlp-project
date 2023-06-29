@@ -66,6 +66,9 @@ if __name__ == "__main__":
         parser.add_argument('--token_aggregation', type=str, default='max',
                             help='Strategy that is used for token probability aggregation (default: max)')
         
+        parser.add_argument('--iterations', type=int, default='10',
+                            help='Number of active learning iterations (default: 10)')
+        
         args = parser.parse_args()
 
         system = System()
@@ -92,4 +95,5 @@ if __name__ == "__main__":
         webbrowser.open(url)
 
         active_learner = ActiveLearning()
-        active_learner.iteration(classifier=classifier, unlabeled_data=texts[:1], num_to_annotate=args.num_suggestions)
+        for i in range(args.iterations):
+            active_learner.iteration(classifier=classifier, unlabeled_data=texts[:1], num_to_annotate=args.num_suggestions)

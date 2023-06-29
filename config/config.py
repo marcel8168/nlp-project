@@ -53,10 +53,7 @@ WORK_DIR = '/brat/work'
 #
 #     'editor': 'annotate',
 
-USER_PASSWORD = {
-    'anne':'anne',
-    'bob':'bob'
-}
+USER_PASSWORD = False
 
 
 ########## ADVANCED CONFIGURATION OPTIONS ##########

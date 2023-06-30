@@ -131,16 +131,19 @@ if __name__ == "__main__":
 
     # Test SciBertClassifier
     # ----------------------
-    logging.basicConfig(filename='example.log', filemode='w', encoding='utf-8', level=logging.INFO)
-    cons_dataset = load_dataset("json", data_files="./notebooks/data/dataset.jsonl")
-    cons_dataset = cons_dataset["train"].train_test_split()
+    # logging.basicConfig(filename='example.log', filemode='w', encoding='utf-8', level=logging.INFO)
+    # cons_dataset = load_dataset("json", data_files="./notebooks/data/dataset.jsonl")
+    # cons_dataset = cons_dataset["train"].train_test_split()
 
-    classifier = SciBertClassifier(3, "drug", ['O', 'B-drug', 'I-drug'])
-    labeled_dataset = cons_dataset.map(classifier.generate_row_labels)
-    classifier.fit(labeled_dataset)
+    # classifier = SciBertClassifier(3, "drug", ['O', 'B-drug', 'I-drug'])
+    # labeled_dataset = cons_dataset.map(classifier.generate_row_labels)
+    # classifier.fit(labeled_dataset)
 
-    learner = ActiveLearning()
-    text_file = TextFile("36476732.txt", "doc")
-    test_text = text_file.read()
-    uncertain_words = learner.iteration(classifier, [test_text], 3)
-    
+    # learner = ActiveLearning()
+    # text_file = TextFile("36476732.txt", "doc")
+    # test_text = text_file.read()
+    # uncertain_words = learner.iteration(classifier, [test_text], 3)
+    al = ActiveLearning()
+    tf = TextFile("ade.txt", "doc/")
+    af = AnnotationFile("ade.ann", "doc/")
+    al.apply_annotation(tf, af)

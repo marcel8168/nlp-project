@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import time
 from typing import Iterable, Union
 from modAL.uncertainty import uncertainty_sampling
@@ -48,6 +49,7 @@ class ActiveLearning:
         
         while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
             self.check_file_change(path=path_to_collection, file_names=file_names)
+            self.assign_annotation()
         logging.info("Annotation by domain expert finished. No suggestions left.")
         title = "Annotation finished"
         message = "You finished the current annotation step.\nNow the next training iteration began.\nPlease do not change any file until the next call."
@@ -144,3 +146,28 @@ class ActiveLearning:
                 suggestions.extend([annotation for annotation in annotation_list if annotation.type == SUGGESTION_ANNOTATION_TYPE])
         
         return len(suggestions) > 0
+    
+    def apply_annotation(self, text_file: TextFile, annotation_file: AnnotationFile) -> None:
+        """
+        Applies annotations from an old version of the text file to all identical words
+        in the new version of the text file, including the label, begin index, and end index.
+
+        Arguments
+        ---------
+            old_text_file (str): Path to the old version of the text file.
+            new_text_file (str): Path to the new version of the text file.
+            annotation_file (str): Path to the annotation file.
+        """
+
+        sentences = text_file.get_sentence_info()
+        manual_annotation = annotation_file.read()[-1]
+        new_annotations= []
+
+        for sentence in sentences:
+            pattern = r'\b{}\b'.format(re.escape(manual_annotation.excerpt))
+            match = re.search(pattern, sentence)
+            if match:
+                new_annotations.append(Annotation(manual_annotation.file_name, manual_annotation.type, sentence["start"] + match.start(), sentence["start"] + match.end()))
+
+        annotation_file.add_annotations(new_annotations)
+

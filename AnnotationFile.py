@@ -68,13 +68,14 @@ class AnnotationFile:
             file.writelines(annotation_lines)
         logging.info(f"Wrote into {self.path + self.file_name}:\n" + str([ann.to_string(usage="info") for ann in annotations]))
 
-    def add_annotations(self, annotations: Iterable[Annotation]) -> None:
+    def add_annotations(self, annotations: Iterable[Annotation], overwrite_existing: Optional[bool] = False) -> None:
         """
         Add annotations to the annotation file object.
 
         Arguments
         ---------
             annotations (Iterable[Anntation]): Iterable set of annotation objects
+            overwrite_existing (Optional[bool]): Flag whether to overwrite existing annotations
         """
         existing_annotations = self.read()
 
@@ -103,3 +104,16 @@ class AnnotationFile:
         if new_annotations:
             logging.info("Adding annotations.")
             self.write(new_annotations)
+
+        if overwrite_existing:
+            existing_annotations = self.read()
+            for existing_ann in existing_annotations[:highest_id_num]:
+                for new_ann in annotations:
+                    if existing_ann.excerpt == new_ann.excerpt:
+                        existing_ann.type = new_ann.type
+            annotation_lines = [
+                ann.to_string(usage="annotation") for ann in existing_annotations
+            ]
+            with open(self.path + self.file_name, 'w') as file:
+                file.writelines(annotation_lines)
+                

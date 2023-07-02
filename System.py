@@ -3,6 +3,8 @@ import os
 import platform
 import subprocess
 from typing import Optional, Tuple
+
+import pyautogui
 import constants
 
 
@@ -94,3 +96,6 @@ class System:
             for name, val in constants.__dict__.items():
                 if not name.startswith('__'):
                     file.write(f"{name} = {repr(val)}\n")
+
+    def reload(self) -> None:
+        pyautogui.hotkey('F5')

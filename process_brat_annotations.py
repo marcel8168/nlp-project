@@ -143,7 +143,7 @@ if __name__ == "__main__":
     # text_file = TextFile("36476732.txt", "doc")
     # test_text = text_file.read()
     # uncertain_words = learner.iteration(classifier, [test_text], 3)
-    al = ActiveLearning()
-    tf = TextFile("ade.txt", "doc/")
+    
     af = AnnotationFile("ade.ann", "doc/")
-    al.apply_annotation(tf, af)
+    ann = Annotation("ade.ann", "drug", 2212, 2213, "of")
+    af.add_annotations([ann], True)

@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import time
 from typing import Iterable, Union
 from modAL.uncertainty import uncertainty_sampling
@@ -45,9 +46,13 @@ class ActiveLearning:
         gui.show_custom_popup(title, message)
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
-        
+        file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
         while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
-            self.check_file_change(path=path_to_collection, file_names=file_names)
+            annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
+            changed_file = self.check_file_change(path=path_to_collection, file_names=annotation_files)
+            self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
+            system.reload()
+
         logging.info("Annotation by domain expert finished. No suggestions left.")
         title = "Annotation finished"
         message = "You finished the current annotation step.\nNow the next training iteration began.\nPlease do not change any file until the next call."
@@ -101,7 +106,7 @@ class ActiveLearning:
                                              path=path_to_collection)
             annotation_file.add_annotations(annotations=annotations)
 
-    def check_file_change(self, path: str, file_names: list[str]) -> bool:
+    def check_file_change(self, path: str, file_names: list[str]) -> str:
         """
         Checks if a file has been changed by comparing its modification time.
 
@@ -109,19 +114,20 @@ class ActiveLearning:
         ---------
             filename (str): The path to the file to monitor.
         """
-        initial_mod_time = np.ndarray((len(file_names),))
-        current_mod_time = np.ndarray((len(file_names),))
-        
-        for idx, file_name in enumerate(file_names):
-            initial_mod_time[idx] = os.path.getmtime(path + file_name)
-            current_mod_time[idx] = os.path.getmtime(path + file_name)
+        initial_state = {}
 
-        while np.array_equal(current_mod_time, initial_mod_time):
+        for file_name in file_names:
+            file_path = os.path.join(path, file_name)
+            with open(file_path, 'r') as file:
+                initial_state[file_name] = file.read()
+
+        while True:
             time.sleep(2)
-            for idx, file_name in enumerate(file_names):
-                current_mod_time[idx] = os.path.getmtime(path + file_name)
-        
-        return True
+            for file_name in file_names:
+                file_path = os.path.join(path, file_name)
+                with open(file_path, 'r') as file:
+                    if file.read() != initial_state[file_name]:
+                        return file_name
     
     def suggestions_left_in_files(self, path: str, file_names: list[str]) -> bool:
         """
@@ -144,3 +150,46 @@ class ActiveLearning:
                 suggestions.extend([annotation for annotation in annotation_list if annotation.type == SUGGESTION_ANNOTATION_TYPE])
         
         return len(suggestions) > 0
+    
+    def apply_annotation(self, path: str, file_names: str, changed_file: str) -> None:
+        """
+        Applies annotations from an old version of the text file to all identical words
+        in the new version of the text file, including the label, begin index, and end index.
+
+        Arguments
+        ---------
+            path (str): Path to the collection.
+            file_names (str): Files in the collection.
+            changed_file (str): Annotation file that was changed.
+
+        Raises
+        ------
+            ValueError: If changed file is not of type '.ann'
+        """
+        if ".ann" not in changed_file:
+            raise ValueError("The changed file must be of type '.ann'")
+        
+        distinct_file_names = {file_name[:-4] for file_name in file_names if ".txt" in file_name}
+        annotation_file = AnnotationFile(file_name=changed_file, path=path)
+        annotations = [ann for ann in annotation_file.read() if ann.type != SUGGESTION_ANNOTATION_TYPE]
+        for annotation in annotations:
+            excerpt = annotation.excerpt
+
+            for text_file in distinct_file_names:
+                sentences = TextFile(file_name=text_file + ".txt", path=path).get_sentence_info()
+                new_annotations= []
+
+                for idx, sentence in enumerate(sentences["sentence"]):
+                    pattern = r'\b{}\b'.format(re.escape(excerpt))
+                    match = re.search(pattern, sentence)
+                    if match:
+                        new_annotations.append(
+                            Annotation(file_name=text_file + ".ann", 
+                                    type=annotation.type, 
+                                    begin=sentences["start"][idx] + match.start(), 
+                                    end=sentences["start"][idx] + match.end(), 
+                                    excerpt=excerpt)
+                            )
+                annotation_file_to_change = AnnotationFile(file_name=text_file + ".ann", path=path)
+                annotation_file_to_change.add_annotations(annotations=new_annotations, overwrite_existing=True)
+

@@ -94,9 +94,9 @@ class TextFile:
         excerpt_infos = set()
         for excerpt in excerpts:
             pattern = r"\b{}\b".format(excerpt)
-            matches = re.finditer(pattern, self.text)
+            matches = re.finditer(pattern, self.text, re.IGNORECASE)
             for match in matches:
-                excerpt_infos.add((excerpt, match.start(), match.end()))
+                excerpt_infos.add((match.group(0), match.start(), match.end()))
         
         return list(excerpt_infos)
     

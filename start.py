@@ -69,13 +69,18 @@ if __name__ == "__main__":
         parser.add_argument('--iterations', type=int, default='10',
                             help='Number of active learning iterations (default: 10)')
         
+        parser.add_argument('--certainty_threshold', type=int, default='90',
+                            help='Probability threshold for considering a prediction as certain and adding the annotation to the annotation files (default: 0.9)')
+        
         args = parser.parse_args()
 
         system = System()
         system.set_constant_value(constant_name="TARGET_CLASS", value=args.label)
+        system.set_constant_value(constant_name="CERTAINTY_THRESHOLD", value=args.certainty_threshold)
 
-        add_to_config("config/annotation.conf", "entities", [SUGGESTION_ANNOTATION_TYPE, args.label, "no-" + args.label])
-        add_to_config("config/visual.conf", "labels", [SUGGESTION_ANNOTATION_TYPE + " | Annotation suggestion | TBA", args.label + " | " + args.label + " name | " + args.label[:2], "no-" + args.label + " | " + "no-" + args.label + " | no" + args.label[0]])
+        add_to_config(file_path="config/annotation.conf", type="entities", entities=[SUGGESTION_ANNOTATION_TYPE, args.label, "no-" + args.label])
+        add_to_config(file_path="config/visual.conf", type="labels", entities=[SUGGESTION_ANNOTATION_TYPE + " | Annotation suggestion | TBA", args.label + " | " + args.label + " name | " + args.label[:2], "no-" + args.label + " | " + "no-" + args.label + " | no" + args.label[0]])
+        add_to_config(file_path="config/visual.conf", type="drawing", entities=["SPAN_DEFAULT	fgColor:black, bgColor:lightgreen, borderColor:darken", "ARC_DEFAULT	color:black, dashArray:-, arrowHead:triangle-5, labelArrow:none", SUGGESTION_ANNOTATION_TYPE + "	bgColor:lightsalmon"])
 
         system.start_docker()
         

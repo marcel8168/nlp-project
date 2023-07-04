@@ -2,7 +2,7 @@ import logging
 import os
 import re
 import time
-from typing import Iterable, Union
+from typing import Iterable, Optional, Union
 from modAL.uncertainty import uncertainty_sampling
 import sklearn
 import numpy as np
@@ -14,7 +14,7 @@ from Gui import GUI
 from System import System
 from TextFile import TextFile
 
-from constants import FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE
+from constants import CERTAINTY_THRESHOLD, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE
 
 
 class ActiveLearning:
@@ -38,12 +38,16 @@ class ActiveLearning:
         predictions = classifier.predictions.flatten()
         uncertain_samples = list(predictions[indices[0]])
         logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
-        suggested_samples = [sample["word"] for sample in uncertain_samples]
+        suggested_samples = list({sample["word"] for sample in uncertain_samples})
         self.add_samples_to_annotation_files(samples=suggested_samples)
+
+        most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
+        self.add_samples_to_annotation_files(samples=most_certain_predictions)
 
         title = "Suggestions loaded"
         message = "Suggestions has been loaded.\nYou can now start annotating."
         gui.show_custom_popup(title, message)
+        system.reload()
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
@@ -180,16 +184,35 @@ class ActiveLearning:
                 new_annotations= []
 
                 for idx, sentence in enumerate(sentences["sentence"]):
-                    pattern = r'\b{}\b'.format(re.escape(excerpt))
-                    match = re.search(pattern, sentence)
+                    pattern = r'\b{}\b'.format(excerpt)
+                    match = re.search(pattern, sentence, re.IGNORECASE)
                     if match:
                         new_annotations.append(
-                            Annotation(file_name=text_file + ".ann", 
-                                    type=annotation.type, 
-                                    begin=sentences["start"][idx] + match.start(), 
-                                    end=sentences["start"][idx] + match.end(), 
-                                    excerpt=excerpt)
+                            Annotation(file_name=text_file + ".ann",
+                                        type=annotation.type,
+                                        begin=sentences["start"][idx] + match.start(),
+                                        end=sentences["start"][idx] + match.end(),
+                                        excerpt=match.group(0)
+                                    )
                             )
                 annotation_file_to_change = AnnotationFile(file_name=text_file + ".ann", path=path)
                 annotation_file_to_change.add_annotations(annotations=new_annotations, overwrite_existing=True)
 
+    def get_most_certain_predictions(self, classifier: sklearn.base.BaseEstimator, X: Iterable):
+        """
+        Get the most certain predictions from the model's predictions.
+
+        Arguments
+        ---------
+            classifier (sklearn.base.BaseEstimator): Classifier to compute predictions.
+            X (Iterable): Input data to make predictions.
+
+        Returns
+        -------
+            numpy.ndarray: Array containing the most certain predictions.
+
+        """
+        probabilities = classifier.predict(X=X).flatten()
+        most_certain_predictions = {x['word'] for x in probabilities if x['score'] > CERTAINTY_THRESHOLD and x['entity'] != 'LABEL_0'}
+
+        return most_certain_predictions

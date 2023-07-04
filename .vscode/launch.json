@@ -14,7 +14,9 @@
                 "--label",
                 "drug",
                 "--label_list",
-                "O B-drug I-drug",
+                "O",
+                "B-drug",
+                "I-drug",
             ]
         }
     ]

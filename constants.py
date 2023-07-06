@@ -5,3 +5,7 @@ PATH_TO_BRAT = '.'
 FOLDER_NAME = 'doc'
 COLLECTION_NAME = None
 FILE_NAME = None
+DATA_PATH = './data/'
+TRAINING_DATASET_FILE_NAME = 'training_dataset.json'
+EXTERNAL_TEST_DATASET_FILE_NAME = 'external_test_set.json'
+METRICS_FILE_PATH = './evaluation/metrics.csv'

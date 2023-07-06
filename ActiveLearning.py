@@ -14,7 +14,7 @@ from Gui import GUI
 from System import System
 from TextFile import TextFile
 
-from constants import CERTAINTY_THRESHOLD, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE
+from constants import CERTAINTY_THRESHOLD, DATA_PATH, EXTERNAL_TEST_DATASET_FILE_NAME, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE, TRAINING_DATASET_FILE_NAME
 
 
 class ActiveLearning:
@@ -63,11 +63,9 @@ class ActiveLearning:
         gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)
-        storage_path = "./data/" 
-        file_name = "training_dataset.json"
-        dataset.to_json(storage_path, file_name)
-        logging.info(f"Updated dataset with new annotations is generated and saved under {storage_path + file_name}")
-        dataset = load_dataset("json", data_files=storage_path + file_name)
+        dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
+        logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+        dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
         split_dataset = dataset["train"].train_test_split()
         labeled_dataset = split_dataset.map(classifier.generate_row_labels)
 
@@ -77,6 +75,8 @@ class ActiveLearning:
 
         classifier.save()
         logging.info("Pretrained model saved.")
+
+        classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     
     def add_samples_to_annotation_files(self, samples: Iterable[str]) -> None:
         """

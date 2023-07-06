@@ -126,7 +126,7 @@ class ActiveLearning:
                 initial_state[file_name] = file.read()
 
         while True:
-            time.sleep(2)
+            time.sleep(1)
             for file_name in file_names:
                 file_path = os.path.join(path, file_name)
                 with open(file_path, 'r') as file:

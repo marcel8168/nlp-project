@@ -100,5 +100,5 @@ if __name__ == "__main__":
         webbrowser.open(url)
 
         active_learner = ActiveLearning()
-        for i in range(args.iterations):
+        for i in range(args.iterations - 1):
             active_learner.iteration(classifier=classifier, unlabeled_data=texts[:1], num_to_annotate=args.num_suggestions)

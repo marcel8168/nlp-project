@@ -45,7 +45,7 @@ class ActiveLearning:
         self.add_samples_to_annotation_files(samples=most_certain_predictions)
 
         title = "Suggestions loaded"
-        message = "Suggestions has been loaded.\nYou can now start annotating."
+        message = "Suggestions has been loaded. You can now start annotating.\n\nInfo:\nAnnotation suggestions by the Active Learning process will be marked red. Whenever a change was done, BRAT will reload to apply changes on identical cases."
         gui.show_custom_popup(title, message)
         system.reload()
 
@@ -59,7 +59,7 @@ class ActiveLearning:
 
         logging.info("Annotation by domain expert finished. No suggestions left.")
         title = "Annotation finished"
-        message = "You finished the current annotation step.\nNow the next training iteration began.\nPlease do not change any file until the next call."
+        message = "You finished the current annotation step.\n\nNow the next training iteration began. Please do not change any file until the next call."
         gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)

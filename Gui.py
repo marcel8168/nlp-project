@@ -23,10 +23,11 @@ class GUI:
         height = min(200, 30 * (text_length // 50 + 1)) + 100
         popup.geometry(f"{width}x{height}")
 
-        label = tkinter.Label(popup, text=message, padx=20, pady=20, anchor="w")
+        label = tkinter.Label(popup, text=message, padx=20, pady=20, wraplength=350, justify='left')
         label.pack()
 
         ok_button = tkinter.Button(popup, text="OK", command=popup.destroy, width=20)
         ok_button.pack(pady=10)
 
+        popup.focus_force()
         popup.mainloop()

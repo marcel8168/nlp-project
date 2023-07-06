@@ -1,0 +1,1191 @@
+{
+    "text": "The patient was prescribed Ibuprofen for pain management.",
+    "drug": [
+        "Ibuprofen"
+    ],
+    "drug_indices_start": [
+        26
+    ],
+    "drug_indices_end": [
+        34
+    ]
+}
+{
+    "text": "Statins such as Atorvastatin are commonly prescribed for managing high cholesterol levels.",
+    "drug": [
+        "Statins",
+        "Atorvastatin"
+    ],
+    "drug_indices_start": [
+        0,
+        16
+    ],
+    "drug_indices_end": [
+        6,
+        28
+    ]
+}
+{
+    "text": "Metformin is a widely used medication for the treatment of type 2 diabetes.",
+    "drug": [
+        "Metformin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The patient developed an allergic reaction to Penicillin, which led to hives and difficulty breathing.",
+    "drug": [
+        "Penicillin"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "The doctor prescribed Lisinopril to control high blood pressure.",
+    "drug": [
+        "Lisinopril"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        30
+    ]
+}
+{
+    "text": "Insulin injections are necessary for patients with type 1 diabetes.",
+    "drug": [
+        "Insulin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        7
+    ]
+}
+{
+    "text": "The patient experienced gastrointestinal bleeding after taking Aspirin for a prolonged period.",
+    "drug": [
+        "Aspirin"
+    ],
+    "drug_indices_start": [
+        49
+    ],
+    "drug_indices_end": [
+        56
+    ]
+}
+{
+    "text": "Levothyroxine is commonly prescribed for patients with hypothyroidism.",
+    "drug": [
+        "Levothyroxine"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        13
+    ]
+}
+{
+    "text": "The use of Warfarin requires regular monitoring of blood clotting time.",
+    "drug": [
+        "Warfarin"
+    ],
+    "drug_indices_start": [
+        10
+    ],
+    "drug_indices_end": [
+        18
+    ]
+}
+{
+    "text": "The patient is allergic to Sulfa drugs, and its usage should be avoided.",
+    "drug": [
+        "Sulfa"
+    ],
+    "drug_indices_start": [
+        21
+    ],
+    "drug_indices_end": [
+        26
+    ]
+}
+{
+    "text": "Cetirizine is an antihistamine commonly used to treat allergies.",
+    "drug": [
+        "Cetirizine"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        10
+    ]
+}
+{
+    "text": "The doctor prescribed Azithromycin for the treatment of a bacterial infection.",
+    "drug": [
+        "Azithromycin"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        32
+    ]
+}
+{
+    "text": "The patient reported adverse effects after taking Omeprazole for gastric acid reflux.",
+    "drug": [
+        "Omeprazole"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        46
+    ]
+}
+{
+    "text": "Morphine is a potent painkiller often used in post-operative care.",
+    "drug": [
+        "Morphine"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        7
+    ]
+}
+{
+    "text": "The patient was prescribed Gabapentin to manage neuropathic pain.",
+    "drug": [
+        "Gabapentin"
+    ],
+    "drug_indices_start": [
+        27
+    ],
+    "drug_indices_end": [
+        37
+    ]
+}
+{
+    "text": "Albuterol inhalers are commonly used for the relief of asthma symptoms.",
+    "drug": [
+        "Albuterol"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The patient experienced drowsiness after taking Loratadine for allergy relief.",
+    "drug": [
+        "Loratadine"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        47
+    ]
+}
+{
+    "text": "The doctor prescribed Clopidogrel to prevent blood clot formation after a stent procedure.",
+    "drug": [
+        "Clopidogrel"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        31
+    ]
+}
+{
+    "text": "Acetaminophen is a commonly used over-the-counter medication for pain and fever.",
+    "drug": [
+        "Acetaminophen"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        13
+    ]
+}
+{
+    "text": "The patient was advised to apply Hydrocortisone cream for the treatment of eczema.",
+    "drug": [
+        "Hydrocortisone"
+    ],
+    "drug_indices_start": [
+        22
+    ],
+    "drug_indices_end": [
+        36
+    ]
+}
+{
+    "text": "The use of Furosemide helps in the management of fluid retention in heart failure patients.",
+    "drug": [
+        "Furosemide"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patient experienced muscle pain as a side effect of Simvastatin.",
+    "drug": [
+        "Simvastatin"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        51
+    ]
+}
+{
+    "text": "Ondansetron is commonly used to prevent nausea and vomiting after chemotherapy.",
+    "drug": [
+        "Ondansetron"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        10
+    ]
+}
+{
+    "text": "The doctor prescribed Topiramate to help control seizures in patients with epilepsy.",
+    "drug": [
+        "Topiramate"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        30
+    ]
+}
+{
+    "text": "The patient experienced allergic reactions to Amoxicillin, resulting in skin rash and itching.",
+    "drug": [
+        "Amoxicillin"
+    ],
+    "drug_indices_start": [
+        35
+    ],
+    "drug_indices_end": [
+        46
+    ]
+}
+{
+    "text": "The use of Nitroglycerin helps in the relief of chest pain associated with angina.",
+    "drug": [
+        "Nitroglycerin"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        24
+    ]
+}
+{
+    "text": "Dexamethasone is a corticosteroid medication used to reduce inflammation.",
+    "drug": [
+        "Dexamethasone"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        13
+    ]
+}
+{
+    "text": "The patient reported dizziness after taking Amlodipine for blood pressure control.",
+    "drug": [
+        "Amlodipine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "The doctor prescribed Risperidone to manage symptoms of schizophrenia.",
+    "drug": [
+        "Risperidone"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        31
+    ]
+}
+{
+    "text": "Ibuprofen should be taken with food to minimize the risk of stomach irritation.",
+    "drug": [
+        "Ibuprofen"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The patient is allergic to Codeine and should avoid medications containing it.",
+    "drug": [
+        "Codeine"
+    ],
+    "drug_indices_start": [
+        28
+    ],
+    "drug_indices_end": [
+        34
+    ]
+}
+{
+    "text": "The use of Escitalopram has been effective in treating symptoms of depression.",
+    "drug": [
+        "Escitalopram"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        24
+    ]
+}
+{
+    "text": "The patient was prescribed Alprazolam for the management of anxiety.",
+    "drug": [
+        "Alprazolam"
+    ],
+    "drug_indices_start": [
+        26
+    ],
+    "drug_indices_end": [
+        37
+    ]
+}
+{
+    "text": "Cephalexin is commonly used to treat bacterial infections such as urinary tract infections.",
+    "drug": [
+        "Cephalexin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The doctor recommended Pravastatin for lowering cholesterol levels.",
+    "drug": [
+        "Pravastatin"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        31
+    ]
+}
+{
+    "text": "The patient experienced nausea after taking Metoclopramide for gastric motility disorders.",
+    "drug": [
+        "Metoclopramide"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        50
+    ]
+}
+{
+    "text": "Levofloxacin is an antibiotic commonly prescribed for respiratory tract infections.",
+    "drug": [
+        "Levofloxacin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        12
+    ]
+}
+{
+    "text": "The use of Losartan helps in the management of high blood pressure.",
+    "drug": [
+        "Losartan"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        20
+    ]
+}
+{
+    "text": "The patient reported diarrhea after taking Erythromycin for an infection.",
+    "drug": [
+        "Erythromycin"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        50
+    ]
+}
+{
+    "text": "The doctor prescribed Methotrexate for the treatment of rheumatoid arthritis.",
+    "drug": [
+        "Methotrexate"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        32
+    ]
+}
+{
+    "text": "Hydrochlorothiazide is a diuretic medication used to manage fluid retention.",
+    "drug": [
+        "Hydrochlorothiazide"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        19
+    ]
+}
+{
+    "text": "The patient experienced sleepiness after taking Zolpidem for insomnia.",
+    "drug": [
+        "Zolpidem"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        44
+    ]
+}
+{
+    "text": "The use of Loperamide helps in the relief of diarrhea symptoms.",
+    "drug": [
+        "Loperamide"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patient is allergic to Ciprofloxacin and should avoid fluoroquinolone antibiotics.",
+    "drug": [
+        "Ciprofloxacin"
+    ],
+    "drug_indices_start": [
+        26
+    ],
+    "drug_indices_end": [
+        39
+    ]
+}
+{
+    "text": "The doctor prescribed Bupropion as an aid to quit smoking.",
+    "drug": [
+        "Bupropion"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        29
+    ]
+}
+{
+    "text": "Amoxicillin-clavulanate is a combination antibiotic used to treat various infections.",
+    "drug": [
+        "Amoxicillin-clavulanate"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patient experienced stomach upset after taking Ranitidine for acid reflux.",
+    "drug": [
+        "Ranitidine"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        46
+    ]
+}
+{
+    "text": "The use of Methadone helps in the management of opioid addiction.",
+    "drug": [
+        "Methadone"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        21
+    ]
+}
+{
+    "text": "The doctor prescribed Duloxetine for the treatment of neuropathic pain.",
+    "drug": [
+        "Duloxetine"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        30
+    ]
+}
+{
+    "text": "The patient reported headache as a side effect of Propranolol.",
+    "drug": [
+        "Propranolol"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        51
+    ]
+}
+{
+    "text": "Clonazepam is commonly used as an anticonvulsant for the management of seizures.",
+    "drug": [
+        "Clonazepam"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        10
+    ]
+}
+{
+    "text": "The use of Citalopram has shown positive results in the treatment of depression.",
+    "drug": [
+        "Citalopram"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        23
+    ]
+}
+{
+    "text": "The patient experienced dizziness after taking Aripiprazole for bipolar disorder.",
+    "drug": [
+        "Aripiprazole"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "Amoxicillin is commonly prescribed for the treatment of bacterial infections.",
+    "drug": [
+        "Amoxicillin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The doctor recommended Sertraline for the management of obsessive-compulsive disorder.",
+    "drug": [
+        "Sertraline"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        30
+    ]
+}
+{
+    "text": "The patient reported dry mouth as a side effect of Trazodone.",
+    "drug": [
+        "Trazodone"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "Hydralazine is a medication used to manage high blood pressure.",
+    "drug": [
+        "Hydralazine"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The use of Lamotrigine helps in the control of seizures in epilepsy patients.",
+    "drug": [
+        "Lamotrigine"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        23
+    ]
+}
+{
+    "text": "The patient experienced constipation after taking Opioid pain medication.",
+    "drug": [
+        "Opioid"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        42
+    ]
+}
+{
+    "text": "The doctor prescribed Methocarbamol for muscle relaxation in cases of musculoskeletal pain.",
+    "drug": [
+        "Methocarbamol"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        33
+    ]
+}
+{
+    "text": "Acyclovir is commonly used for the treatment of viral infections such as herpes.",
+    "drug": [
+        "Acyclovir"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The patient reported nausea after taking Fluoxetine for the treatment of depression.",
+    "drug": [
+        "Fluoxetine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "The use of Carbamazepine helps in the control of seizures in epilepsy patients.",
+    "drug": [
+        "Carbamazepine"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        26
+    ]
+}
+{
+    "text": "The patient experienced sleep disturbances after taking Quetiapinefor the management of schizophrenia.",
+    "drug": [
+        "Quetiapine"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        46
+    ]
+}
+{
+    "text": "Naproxen is commonly used as a nonsteroidal anti-inflammatory drug (NSAID) for pain relief.",
+    "drug": [
+        "Naproxen"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        8
+    ]
+}
+{
+    "text": "The doctor prescribed Methamphetamine for the treatment of attention deficit hyperactivity disorder (ADHD).",
+    "drug": [
+        "Methamphetamine"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        33
+    ]
+}
+{
+    "text": "The patient reported heartburn after taking Ranitidine for gastric acid reflux.",
+    "drug": [
+        "Ranitidine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "The use of Venlafaxine has shown efficacy in the treatment of generalized anxiety disorder.",
+    "drug": [
+        "Venlafaxine"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        23
+    ]
+}
+{
+    "text": "The patient experienced diarrhea after taking Ciprofloxacin for a bacterial infection.",
+    "drug": [
+        "Ciprofloxacin"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        49
+    ]
+}
+{
+    "text": "Simvastatin is commonly prescribed to lower cholesterol levels and reduce the risk of cardiovascular disease.",
+    "drug": [
+        "Simvastatin"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The doctor recommended Dulcolax for the relief of constipation symptoms.",
+    "drug": [
+        "Dulcolax"
+    ],
+    "drug_indices_start": [
+        26
+    ],
+    "drug_indices_end": [
+        34
+    ]
+}
+{
+    "text": "The patient is allergic to Ibuprofen and should avoid nonsteroidal anti-inflammatory drugs (NSAIDs).",
+    "drug": [
+        "Ibuprofen"
+    ],
+    "drug_indices_start": [
+        27
+    ],
+    "drug_indices_end": [
+        36
+    ]
+}
+{
+    "text": "The use of Rabeprazole helps in the management of gastroesophageal reflux disease (GERD).",
+    "drug": [
+        "Rabeprazole"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        24
+    ]
+}
+{
+    "text": "The patient reported insomnia as a side effect of Escitalopram.",
+    "drug": [
+        "Escitalopram"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        51
+    ]
+}
+{
+    "text": "Citalopram is commonly prescribed for the treatment of depression and anxiety disorders.",
+    "drug": [
+        "Citalopram"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The doctor prescribed Tramadol for the management of moderate to severe pain.",
+    "drug": [
+        "Tramadol"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        28
+    ]
+}
+{
+    "text": "The patient experienced skin rash after taking Lamotrigine for epilepsy treatment.",
+    "drug": [
+        "Lamotrigine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        50
+    ]
+}
+{
+    "text": "Alendronate is commonly prescribed for the treatment and prevention of osteoporosis.",
+    "drug": [
+        "Alendronate"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The use of Paroxetine has shown efficacy in the treatment of social anxiety disorder.",
+    "drug": [
+        "Paroxetine"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patientreported weight gain as a side effect of Olanzapine for the management of bipolar disorder.",
+    "drug": [
+        "Olanzapine"
+    ],
+    "drug_indices_start": [
+        53
+    ],
+    "drug_indices_end": [
+        64
+    ]
+}
+{
+    "text": "Diclofenac is commonly used as a nonsteroidal anti-inflammatory drug (NSAID) for pain relief.",
+    "drug": [
+        "Diclofenac"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The doctor prescribed Mirtazapine for the treatment of depression and insomnia.",
+    "drug": [
+        "Mirtazapine"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        31
+    ]
+}
+{
+    "text": "The patient experienced dry eyes as a side effect of Isotretinoin for acne treatment.",
+    "drug": [
+        "Isotretinoin"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        51
+    ]
+}
+{
+    "text": "Metoprolol is commonly prescribed for the management of hypertension and angina.",
+    "drug": [
+        "Metoprolol"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        10
+    ]
+}
+{
+    "text": "The use of Gabapentin helps in the management of neuropathic pain and seizures.",
+    "drug": [
+        "Gabapentin"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patient reported drowsiness after taking Hydroxyzine for anxiety relief.",
+    "drug": [
+        "Hydroxyzine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        50
+    ]
+}
+{
+    "text": "Fluconazole is commonly used for the treatment of fungal infections such as thrush.",
+    "drug": [
+        "Fluconazole"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        11
+    ]
+}
+{
+    "text": "The doctor prescribed Methyldopa for the management of high blood pressure during pregnancy.",
+    "drug": [
+        "Methyldopa"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        31
+    ]
+}
+{
+    "text": "The patient experienced sleep disturbances after taking Quinidine for heart rhythm control.",
+    "drug": [
+        "Quinidine"
+    ],
+    "drug_indices_start": [
+        36
+    ],
+    "drug_indices_end": [
+        45
+    ]
+}
+{
+    "text": "Metronidazole is commonly prescribed for the treatment of bacterial and parasitic infections.",
+    "drug": [
+        "Metronidazole"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        13
+    ]
+}
+{
+    "text": "The use of Budesonide helps in the management of inflammatory bowel disease (IBD).",
+    "drug": [
+        "Budesonide"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        22
+    ]
+}
+{
+    "text": "The patient reported muscle cramps after taking Quinine for leg cramp relief.",
+    "drug": [
+        "Quinine"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        45
+    ]
+}
+{
+    "text": "Buprenorphine is commonly used as a medication-assisted treatment for opioid dependence.",
+    "drug": [
+        "Buprenorphine"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        13
+    ]
+}
+{
+    "text": "The doctor prescribed Sulfamethoxazole-trimethoprim for the treatment of a urinary tract infection.",
+    "drug": [
+        "Sulfamethoxazole-trimethoprim"
+    ],
+    "drug_indices_start": [
+        20
+    ],
+    "drug_indices_end": [
+        43
+    ]
+}
+{
+    "text": "The patient experienced dizziness after taking Donepezil for the management of Alzheimer's disease.",
+    "drug": [
+        "Donepezil"
+    ],
+    "drug_indices_start": [
+        39
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "Ibuprofen is commonly used as a nonsteroidal anti-inflammatory drug (NSAID) for pain relief.",
+    "drug": [
+        "Ibuprofen"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        9
+    ]
+}
+{
+    "text": "The use of Ropinirole has shown efficacy in the treatment of restless legs syndrome.",
+    "drug": [
+        "Ropinirole"
+    ],
+    "drug_indices_start": [
+        12
+    ],
+    "drug_indices_end": [
+        23
+    ]
+}
+{
+    "text": "The patient reported skin irritation after applying Tacrolimus for the treatment of eczema.",
+    "drug": [
+        "Tacrolimus"
+    ],
+    "drug_indices_start": [
+        38
+    ],
+    "drug_indices_end": [
+        48
+    ]
+}
+{
+    "text": "Lisinopril is commonly prescribed for the management of high blood pressure and heart failure.",
+    "drug": [
+        "Lisinopril"
+    ],
+    "drug_indices_start": [
+        0
+    ],
+    "drug_indices_end": [
+        10
+    ]
+}

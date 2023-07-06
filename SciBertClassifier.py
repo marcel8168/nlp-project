@@ -3,10 +3,15 @@ import statistics
 from typing import Iterable, Optional
 import evaluate
 from joblib import dump, load
+from datasets import load_dataset
+import pandas as pd
 from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline
 from sklearn.base import BaseEstimator
 import numpy as np
 from datasets import Dataset
+import matplotlib.pyplot as plt
+
+from constants import METRICS_FILE_PATH, TARGET_CLASS
 
 
 class SciBertClassifier(BaseEstimator):
@@ -171,42 +176,6 @@ class SciBertClassifier(BaseEstimator):
         tokens["labels"] = labels
         
         return tokens
-    
-    def compute_metrics(self, p) -> dict:
-        """
-        Computes evaluation metrics based on the predictions and labels.
-
-        Arguments
-        ---------
-            p (object): The prediction object containing the predicted values.
-
-        Returns
-        -------
-            dict: A dictionary containing the computed evaluation metrics.
-
-        """
-        predictions = p.predictions
-        labels = p.label_ids
-        predictions = np.argmax(predictions, axis=2)
-
-        # Remove ignored index (special tokens)
-        true_predictions = [
-            [self.label_list[p] for (p, l) in zip(prediction, label) if l != -100]
-            for prediction, label in zip(predictions, labels)
-        ]
-        true_labels = [
-            [self.label_list[l] for (p, l) in zip(prediction, label) if l != -100]
-            for prediction, label in zip(predictions, labels)
-        ]
-
-        results = self.metric.compute(predictions=true_predictions, references=true_labels)
-    
-        return {
-            "precision": results["overall_precision"],
-            "recall": results["overall_recall"],
-            "f1": results["overall_f1"],
-            "accuracy": results["overall_accuracy"],
-        }
 
     def fit(self, X: Dataset) -> BaseEstimator:
         """
@@ -228,7 +197,6 @@ class SciBertClassifier(BaseEstimator):
             eval_dataset=X["test"],
             data_collator=self.data_collator,
             tokenizer=self.tokenizer,
-            compute_metrics=self.compute_metrics, 
 
         )
 
@@ -318,3 +286,80 @@ class SciBertClassifier(BaseEstimator):
                 probabilities[-1]["index"] = index
 
         return probabilities
+    
+    def performance_report(self, path_to_test_set: str):
+        predictions = []
+        ground_truth = []
+
+        dataset = load_dataset("json", data_files=path_to_test_set)["train"]
+        prediction_results = self.predict(dataset["text"])
+        for idx, sentence in enumerate(prediction_results):
+            for word in sentence:
+                word_instance = word["word"].lower()
+                predictions.append((word_instance, word["entity"]))
+                if word["word"].lower() in [element.lower() for element in dataset[idx][TARGET_CLASS]]:
+                    ground_truth.append((word_instance, "LABEL_1"))
+                else:
+                    ground_truth.append((word_instance, "LABEL_0"))
+
+        metrics = self.compute_test_metrics(predictions, ground_truth)
+
+        return metrics
+
+    def compute_test_metrics(self, predictions, ground_truth):
+        """
+        Computes evaluation metrics for drug name detection.
+
+        Arguments:
+        - predictions (list): List of predicted drug names.
+        - ground_truth (list): List of ground truth drug information.
+
+        Returns:
+        - metrics (dict): Dictionary containing computed evaluation metrics.
+        """
+        pred_set = set(predictions)
+        gt_set = set(ground_truth)
+
+        tp = len(pred_set.intersection(gt_set))
+        fp = len(pred_set - gt_set)
+        fn = len(gt_set - pred_set)
+
+        precision = tp / (tp + fp) if tp + fp > 0 else 0.0
+        recall = tp / (tp + fn) if tp + fn > 0 else 0.0
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall > 0 else 0.0
+        accuracy = tp / (tp + fp + fn) if tp + fp + fn > 0 else 0.0
+
+        metrics = {
+            "precision": precision,
+            "recall": recall,
+            "f1": f1,
+            "accuracy": accuracy
+        }
+
+        metrics_df = pd.DataFrame(metrics, index=[0])
+        metrics_df.to_csv(METRICS_FILE_PATH, mode='a', header=not os.path.exists(METRICS_FILE_PATH), index=False)
+
+        metrics_df = pd.read_csv(METRICS_FILE_PATH)
+
+        precision_list = metrics_df['precision']
+        recall_list = metrics_df['recall']
+        f1_list = metrics_df['f1']
+        accuracy_list = metrics_df['accuracy']
+
+        plt.plot(metrics_df.index, precision_list, label='Precision')
+        plt.plot(metrics_df.index, recall_list, label='Recall')
+        plt.plot(metrics_df.index, f1_list, label='F1-Score')
+        plt.plot(metrics_df.index, accuracy_list, label='Accuracy')
+
+        # Set labels and title
+        plt.xlabel('Iteration')
+        plt.ylabel('Metric Value')
+        plt.title('Training Metrics')
+
+        # Add legend
+        plt.legend()
+
+        # Show the chart
+        plt.show()
+
+        return metrics

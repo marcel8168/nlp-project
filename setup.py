@@ -5,13 +5,13 @@ with open("README.md", 'r') as f:
     long_description = f.read()
 
 setup(
-    name='nlp_project',
+    name='BRAT_AL_TOOL',
     version='1.0', 
     author='Marcel Hiltner',
     author_email='marcel.hiltner@fau.de',
     url="https://github.com/marcel8168/nlp-project",
     packages=find_packages(),
-    description="NLP-Project @FAU",
+    description="Toolset for active learning based control of medical free-text annotations",
     long_description=long_description,
     install_requires=[
         'datasets==2.12.0',
@@ -25,6 +25,8 @@ setup(
         'torch==2.0.1',
         'transformers==4.29.1',
         'seqeval==1.2.2',
-        'accelerate==0.20.3'
+        'accelerate==0.20.3',
+        'pyautogui==0.9.54',
+        'matplotlib==3.7.2'
     ]
 )

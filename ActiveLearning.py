@@ -30,16 +30,19 @@ class ActiveLearning:
                   num_to_annotate: int = 1):
         gui = GUI()
         system = System()
-
-        indices = uncertainty_sampling(classifier=classifier, 
-                                       X=unlabeled_data, 
-                                       n_instances=num_to_annotate)
         
-        predictions = classifier.predictions.flatten()
-        uncertain_samples = list(predictions[indices[0]])
-        logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
-        suggested_samples = list({sample["word"] for sample in uncertain_samples})
-        self.add_samples_to_annotation_files(samples=suggested_samples)
+        samples = uncertainty_sampling(classifier=classifier, 
+                                       X=unlabeled_data, 
+                                       n_instances=num_to_annotate * 2)
+        indices_all = (samples[0][np.argsort(samples[1])[::-1]], samples[1][np.argsort(samples[1])[::-1]])[0]
+        while num_to_annotate > 0:
+            indices = indices_all[:num_to_annotate]
+            indices_all = indices_all[num_to_annotate:]
+            predictions = classifier.predictions.flatten()
+            uncertain_samples = list(predictions[indices])
+            logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
+            suggested_samples = list({sample["word"] for sample in uncertain_samples})
+            num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples)
 
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
         self.add_samples_to_annotation_files(samples=most_certain_predictions)
@@ -79,7 +82,7 @@ class ActiveLearning:
 
         classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     
-    def add_samples_to_annotation_files(self, samples: Iterable[str]) -> None:
+    def add_samples_to_annotation_files(self, samples: Iterable[str]) -> int:
         """
         Adds samples to annotation files.
 
@@ -109,7 +112,9 @@ class ActiveLearning:
                                               excerpt=word_info[0]))
             annotation_file = AnnotationFile(file_name=annotation_file_name, 
                                              path=path_to_collection)
-            annotation_file.add_annotations(annotations=annotations)
+            num_added = annotation_file.add_annotations(annotations=annotations)
+
+            return num_added
 
     def check_file_change(self, path: str, file_names: list[str]) -> str:
         """

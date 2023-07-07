@@ -1,7 +1,6 @@
 import importlib
 import os
 import platform
-import stat
 import subprocess
 from typing import Optional, Tuple
 
@@ -111,9 +110,3 @@ class System:
 
     def reload(self) -> None:
         pyautogui.hotkey('F5')
-
-    def give_Permissions(self, file_path: str) -> None:
-        if self.operating_system.lower() == "linux":
-            os.chmod(file_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH | stat.S_IWOTH)
-        elif self.operating_system.lower() == "darwin":
-            os.chmod(file_path, 0o666)

@@ -33,9 +33,9 @@ class ActiveLearning:
         
         samples = uncertainty_sampling(classifier=classifier, 
                                        X=unlabeled_data, 
-                                       n_instances=num_to_annotate * 2)
+                                       n_instances=num_to_annotate * 5)
         indices_all = (samples[0][np.argsort(samples[1])[::-1]], samples[1][np.argsort(samples[1])[::-1]])[0]
-        while num_to_annotate > 0:
+        while num_to_annotate > 0 and indices_all.size > 0:
             indices = indices_all[:num_to_annotate]
             indices_all = indices_all[num_to_annotate:]
             predictions = classifier.predictions.flatten()

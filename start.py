@@ -61,7 +61,7 @@ if __name__ == "__main__":
         parser.add_argument('--folder', type=str, default=FOLDER_NAME,
                             help=f'Name of the destination folder (default: {FOLDER_NAME})')
         
-        parser.add_argument('--num_suggestions', type=int, default=3,
+        parser.add_argument('--num_suggestions', type=int, default=10,
                             help='Number of suggestions to be made by the Active Learning functionality (default: 3)')
         
         parser.add_argument('--token_aggregation', type=str, default='max',
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         parser.add_argument('--iterations', type=int, default='10',
                             help='Number of active learning iterations (default: 10)')
         
-        parser.add_argument('--certainty_threshold', type=float, default='90',
+        parser.add_argument('--certainty_threshold', type=float, default='0.9',
                             help='Probability threshold for considering a prediction as certain and adding the annotation to the annotation files (default: 0.9)')
         
         args = parser.parse_args()

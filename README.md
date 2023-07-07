@@ -26,7 +26,7 @@ The following command line options are available for this application:
 - `--path PATH`: Path to brat directory (default: PATH_TO_BRAT).
 - `--collection COLLECTION`: Name of the annotation collection (default: COLLECTION_NAME).
 - `--folder FOLDER`: Name of the destination folder (default: FOLDER_NAME).
-- `--num_suggestions NUM`: Number of suggestions to be made by the Active Learning functionality (default: 3).
+- `--num_suggestions NUM`: Number of suggestions to be made by the Active Learning functionality (default: 10).
 - `--token_aggregation TOKEN_AGGREGATION`: Strategy used for token probability aggregation (default: max).
 - `--iterations NUM`: Number of active learning iterations (default: 10).
 - `--certainty_threshold NUM`: Probability threshold for considering a prediction as certain and adding the annotation to the annotation files (default: 0.9).

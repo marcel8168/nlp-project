@@ -2,6 +2,7 @@ import argparse
 import logging
 import webbrowser
 from ActiveLearning import ActiveLearning
+from Gui import GUI
 from SciBertClassifier import SciBertClassifier
 from System import System
 from TextFile import TextFile
@@ -102,3 +103,8 @@ if __name__ == "__main__":
         active_learner = ActiveLearning()
         for i in range(args.iterations):
             active_learner.iteration(classifier=classifier, unlabeled_data=texts[:1], num_to_annotate=args.num_suggestions)
+
+        gui = GUI()
+        gui.show_custom_popup("End of training", "The Active Learning process has been finished.\n\nYou can now close the window. The model trained on the latest annotations is available under /model/SciBertClassifier.joblib.")
+
+        system.terminate_docker()

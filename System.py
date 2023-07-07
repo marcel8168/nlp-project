@@ -47,6 +47,17 @@ class System:
         except subprocess.CalledProcessError as e:
             print(f"Error: {e}")
 
+    def terminate_docker(self) -> None:
+        try:
+            if self.operating_system.lower() == "windows":
+                subprocess.Popen(['start', 'cmd', '/c', 'docker compose down'], shell=True)
+            elif self.operating_system.lower() == "linux":
+                subprocess.Popen(['docker', 'compose', 'down'])
+            elif self.operating_system.lower() == "darwin":
+                subprocess.run(['osascript', '-e', 'tell app "Terminal" to do script "docker compose down"'], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error: {e}")
+
     def get_constant(self, constant_name: str) -> str:
         """
         Retrieve the value of a constant from the `constants.py` file.

@@ -102,6 +102,8 @@ class SciBertClassifier(BaseEstimator):
 
         self.data_collator = DataCollatorForTokenClassification(self.tokenizer)
 
+        self.create_metrics_file()
+
     def load(self, path: Optional[str] = "") -> None:
         """
         Loads a saved SciBertClassifier model from the specified path.
@@ -305,6 +307,17 @@ class SciBertClassifier(BaseEstimator):
         metrics = self.compute_test_metrics(predictions, ground_truth)
 
         return metrics
+    
+    def create_metrics_file(self) -> None:
+        metrics = {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "accuracy": 0.0,
+        }
+
+        metrics_df = pd.DataFrame(metrics, index=[0])
+        metrics_df.to_csv(METRICS_FILE_PATH, mode='w', header=True, index=False)
 
     def compute_test_metrics(self, predictions, ground_truth):
         """

@@ -86,10 +86,10 @@ if __name__ == "__main__":
         system.start_docker()
         
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=args.path, folder_name=args.folder, collection_name=args.collection)
-        texts = []
+        text = ""
         for file_name in file_names:
             if ".txt" in file_name:
-                texts.append(TextFile(file_name=file_name, path=path_to_collection).read())
+                text += (TextFile(file_name=file_name, path=path_to_collection).read()) + " "
 
         classifier = SciBertClassifier(num_classes=args.num_suggestions, label=args.label, label_list=args.label_list, token_aggregation=args.token_aggregation)
         _, file_names = system.get_file_names_from_path(path_to_brat="./model", folder_name=None)
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
         active_learner = ActiveLearning()
         for i in range(args.iterations):
-            active_learner.iteration(classifier=classifier, unlabeled_data=texts[:1], num_to_annotate=args.num_suggestions)
+            active_learner.iteration(classifier=classifier, unlabeled_data=[text], num_to_annotate=args.num_suggestions)
 
         gui = GUI()
         gui.show_custom_popup("End of training", "The Active Learning process has been finished.\n\nYou can now close the window. The model trained on the latest annotations is available under /model/SciBertClassifier.joblib.")

@@ -3,6 +3,7 @@ import re
 from typing import Iterable, Optional
 from os import path
 from Annotation import Annotation
+from System import System
 
 
 class AnnotationFile:
@@ -66,6 +67,8 @@ class AnnotationFile:
                 ann.to_string(usage="annotation") for ann in annotations
             ]
             file.writelines(annotation_lines)
+        system = System()
+        system.give_Permissions(file_path=full_path)
         logging.info(f"Wrote into {self.path + self.file_name}:\n" + str([ann.to_string(usage="info") for ann in annotations]))
 
     def add_annotations(self, annotations: Iterable[Annotation], overwrite_existing: Optional[bool] = False) -> None:

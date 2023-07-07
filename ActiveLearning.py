@@ -63,18 +63,19 @@ class ActiveLearning:
         gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)
-        dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
-        logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
-        dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
-        split_dataset = dataset["train"].train_test_split()
-        labeled_dataset = split_dataset.map(classifier.generate_row_labels)
+        if not dataset.dataset.empty:
+            dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
+            logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+            dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
+            split_dataset = dataset["train"].train_test_split()
+            labeled_dataset = split_dataset.map(classifier.generate_row_labels)
 
-        logging.info("Training with updated and labeled dataset started..")
-        classifier.fit(labeled_dataset)
-        logging.info("Training finished!")
+            logging.info("Training with updated and labeled dataset started..")
+            classifier.fit(labeled_dataset)
+            logging.info("Training finished!")
 
-        classifier.save()
-        logging.info("Pretrained model saved.")
+            classifier.save()
+            logging.info("Pretrained model saved.")
 
         classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     

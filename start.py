@@ -70,7 +70,7 @@ if __name__ == "__main__":
         parser.add_argument('--iterations', type=int, default='10',
                             help='Number of active learning iterations (default: 10)')
         
-        parser.add_argument('--certainty_threshold', type=int, default='90',
+        parser.add_argument('--certainty_threshold', type=float, default='90',
                             help='Probability threshold for considering a prediction as certain and adding the annotation to the annotation files (default: 0.9)')
         
         args = parser.parse_args()

@@ -13,7 +13,7 @@ class System:
         self.operating_system = platform.system()
         pass
         
-    def get_file_names_from_path(self, path_to_brat: str, folder_name: Optional[str] = None, collection_name: Optional[str] = None) -> Tuple[str, list[str]]:
+    def get_file_names_from_path(self, path_to_brat: str, folder_name: Optional[str] = None, collection_name: Optional[str] = None):
         """
         Retrieves the file names from a specified path in the file system.
 

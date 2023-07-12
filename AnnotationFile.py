@@ -1,10 +1,8 @@
 import logging
-import os
 import re
 from typing import Iterable, Optional
 from os import path
 from Annotation import Annotation
-from System import System
 
 
 class AnnotationFile:
@@ -21,7 +19,7 @@ class AnnotationFile:
         self.file_name = file_name
         self.path = path
 
-    def read(self, filter: Optional[str] = None) -> list[Annotation]:
+    def read(self, filter: Optional[str] = None):
         """
         Read the content of the annotation file object.
         

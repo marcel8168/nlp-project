@@ -17,8 +17,8 @@ class Dataset:
     """
 
     def __init__(self, path_to_collection: Optional[str] = None,
-                 annotation_files: Optional[list[AnnotationFile]] = None,
-                 text_files: Optional[list[TextFile]] = None) -> None:
+                 annotation_files = None,
+                 text_files = None) -> None:
         if path_to_collection:
             self.dataset = self._create_from_collection(path_to_collection=path_to_collection)
         elif annotation_files and text_files:
@@ -26,7 +26,7 @@ class Dataset:
         else: 
             self.dataset = pd.DataFrame([])
 
-    def _create_from_files(self, annotation_files: list[AnnotationFile], text_files: list[TextFile]) -> pd.DataFrame:
+    def _create_from_files(self, annotation_files: list, text_files: list):
         """
         Create a dataset object from files.
 

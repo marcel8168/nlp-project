@@ -116,7 +116,7 @@ class ActiveLearning:
 
             return num_added
 
-    def check_file_change(self, path: str, file_names: list[str]) -> str:
+    def check_file_change(self, path: str, file_names: list) -> str:
         """
         Checks if a file has been changed by comparing its modification time.
 
@@ -139,7 +139,7 @@ class ActiveLearning:
                     if file.read() != initial_state[file_name]:
                         return file_name
     
-    def suggestions_left_in_files(self, path: str, file_names: list[str]) -> bool:
+    def suggestions_left_in_files(self, path: str, file_names: list) -> bool:
         """
         Checks if there are any suggestions left in the given files.
 

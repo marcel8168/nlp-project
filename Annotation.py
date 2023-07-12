@@ -42,14 +42,13 @@ class Annotation:
             ValueError: If 'usage' is neither "annotation" nor "info".
 
         """
-        match usage:
-            case "info":
-                string = f"Annotation({self.file_name}, {self.id}, {self.type}, {self.begin}, {self.end}, {self.excerpt})"
-            case "annotation":
-                string = (
-                    f"{self.id}\t{self.type} {self.begin} {self.end}\t{self.excerpt}\n"
-                )
-            case _:
-                raise ValueError("Invalid usage argument.")
+        if usage == "info":
+            string = f"Annotation({self.file_name}, {self.id}, {self.type}, {self.begin}, {self.end}, {self.excerpt})"
+        elif usage == "annotation":
+            string = (
+                f"{self.id}\t{self.type} {self.begin} {self.end}\t{self.excerpt}\n"
+            )
+        else:
+            raise ValueError("Invalid usage argument.")
 
         return string

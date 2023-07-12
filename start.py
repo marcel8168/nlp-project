@@ -9,7 +9,7 @@ from TextFile import TextFile
 from constants import COLLECTION_NAME, FOLDER_NAME, PATH_TO_BRAT, SUGGESTION_ANNOTATION_TYPE
 
 
-def add_to_config(file_path: str, type: str, entities: list[str]):
+def add_to_config(file_path: str, type: str, entities: list):
     """
     Add the specified entity below the [entities] section in the given file.
 
@@ -42,7 +42,7 @@ def add_to_config(file_path: str, type: str, entities: list[str]):
         file.writelines(contents)
 
 if __name__ == "__main__":
-        logging.basicConfig(filename='example.log', filemode='w', encoding='utf-8', level=logging.INFO)
+        logging.basicConfig(filename='example.log', filemode='w', level=logging.INFO)
         parser = argparse.ArgumentParser(description='Active Learning Toolset for NLP tasks')
 
         

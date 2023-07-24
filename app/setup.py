@@ -1,9 +1,6 @@
 from setuptools import find_packages
 from distutils.core import setup
 
-with open("README.md", 'r') as f:
-    long_description = f.read()
-
 setup(
     name='BRAT_AL_TOOL',
     version='1.0', 
@@ -12,7 +9,6 @@ setup(
     url="https://github.com/marcel8168/nlp-project",
     packages=find_packages(),
     description="Toolset for active learning based control of medical free-text annotations",
-    long_description=long_description,
     install_requires=[
         'datasets==2.12.0',
         'evaluate==0.4.0',

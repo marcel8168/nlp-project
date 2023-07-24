@@ -2,7 +2,7 @@ import argparse
 import logging
 import webbrowser
 from ActiveLearning import ActiveLearning
-from Gui import GUI
+# from Gui import GUI
 from SciBertClassifier import SciBertClassifier
 from System import System
 from TextFile import TextFile
@@ -83,7 +83,9 @@ if __name__ == "__main__":
         add_to_config(file_path="config/visual.conf", type="labels", entities=[SUGGESTION_ANNOTATION_TYPE + " | Annotation suggestion | TBA", args.label + " | " + args.label + " name | " + args.label[:2], "no-" + args.label + " | " + "no-" + args.label + " | no" + args.label[0]])
         add_to_config(file_path="config/visual.conf", type="drawing", entities=["SPAN_DEFAULT	fgColor:black, bgColor:lightgreen, borderColor:darken", "ARC_DEFAULT	color:black, dashArray:-, arrowHead:triangle-5, labelArrow:none", SUGGESTION_ANNOTATION_TYPE + "	bgColor:lightsalmon"])
 
-        system.start_docker()
+        system.copy_config_directory()
+        system.start_brat()
+        #system.start_docker()
         
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=args.path, folder_name=args.folder, collection_name=args.collection)
         text = ""
@@ -98,13 +100,13 @@ if __name__ == "__main__":
         url = "http://localhost:8001/index.xhtml#/"
         url += args.collection + "/" if args.collection else ""
         url += args.folder + "/" if args.folder else ""
-        webbrowser.open(url)
+        # webbrowser.open(url)
 
         active_learner = ActiveLearning()
         for i in range(args.iterations):
             active_learner.iteration(classifier=classifier, unlabeled_data=[text], num_to_annotate=args.num_suggestions)
 
-        gui = GUI()
-        gui.show_custom_popup("End of training", "The Active Learning process has been finished.\n\nYou can now close the window. The model trained on the latest annotations is available under /model/SciBertClassifier.joblib.")
+        # gui = GUI()
+        # gui.show_custom_popup("End of training", "The Active Learning process has been finished.\n\nYou can now close the window. The model trained on the latest annotations is available under /model/SciBertClassifier.joblib.")
 
-        system.terminate_docker()
+        # system.terminate_docker()

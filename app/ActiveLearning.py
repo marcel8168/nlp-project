@@ -2,7 +2,7 @@ import logging
 import os
 import re
 import time
-from typing import Iterable, Optional, Union
+from typing import Iterable, Union
 from modAL.uncertainty import uncertainty_sampling
 import sklearn
 import numpy as np
@@ -10,7 +10,6 @@ from datasets import load_dataset
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from Dataset import Dataset
-# from Gui import GUI
 from System import System
 from TextFile import TextFile
 
@@ -28,7 +27,6 @@ class ActiveLearning:
     def iteration(self, classifier: sklearn.base.BaseEstimator,
                   unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
-        # gui = GUI()
         system = System()
         
         samples = uncertainty_sampling(classifier=classifier, 
@@ -47,23 +45,12 @@ class ActiveLearning:
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
         self.add_samples_to_annotation_files(samples=most_certain_predictions)
 
-        title = "Suggestions loaded"
-        message = "Suggestions has been loaded. You can now start annotating.\n\nInfo:\nAnnotation suggestions by the Active Learning process will be marked red. Whenever a change was done, BRAT will reload to apply changes on identical cases."
-        # gui.show_custom_popup(title, message)
-        # system.reload()
-
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
         while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
             annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
             changed_file = self.check_file_change(path=path_to_collection, file_names=annotation_files)
             self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
-            # system.reload()
-
-        logging.info("Annotation by domain expert finished. No suggestions left.")
-        title = "Annotation finished"
-        message = "You finished the current annotation step.\n\nNow the next training iteration began. Please do not change any file until the next call."
-        # gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)
         if not dataset.dataset.empty:

@@ -85,7 +85,6 @@ if __name__ == "__main__":
 
         system.copy_config_directory()
         system.start_brat()
-        #system.start_docker()
         
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=args.path, folder_name=args.folder, collection_name=args.collection)
         text = ""

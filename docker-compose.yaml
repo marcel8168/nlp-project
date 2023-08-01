@@ -8,3 +8,5 @@ services:
       - 8001:8001
     volumes:
       - ./app/doc:/brat/doc
+      - ./app/model:/brat/model
+      - ./app/model:/brat/evaluation

@@ -6,14 +6,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8001:8001
-    # entrypoint:
-    #   [
-    #     "python",
-    #     "start.py",
-    #     "--label",
-    #     "drug",
-    #     "--label_list",
-    #     "O",
-    #     "B-drug",
-    #     "I-drug"
-    #   ]
+    volumes:
+      - ./app/doc:/brat/doc

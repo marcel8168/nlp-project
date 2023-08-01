@@ -99,13 +99,7 @@ if __name__ == "__main__":
         url = "http://localhost:8001/index.xhtml#/"
         url += args.collection + "/" if args.collection else ""
         url += args.folder + "/" if args.folder else ""
-        # webbrowser.open(url)
 
         active_learner = ActiveLearning()
         for i in range(args.iterations):
             active_learner.iteration(classifier=classifier, unlabeled_data=[text], num_to_annotate=args.num_suggestions)
-
-        # gui = GUI()
-        # gui.show_custom_popup("End of training", "The Active Learning process has been finished.\n\nYou can now close the window. The model trained on the latest annotations is available under /model/SciBertClassifier.joblib.")
-
-        # system.terminate_docker()

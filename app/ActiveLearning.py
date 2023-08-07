@@ -1,3 +1,4 @@
+from itertools import chain
 import logging
 import os
 import re
@@ -29,15 +30,20 @@ class ActiveLearning:
                   num_to_annotate: int = 1):
         system = System()
         
-        samples = uncertainty_sampling(classifier=classifier, 
-                                       X=unlabeled_data, 
-                                       n_instances=num_to_annotate * 5)
-        indices_all = (samples[0][np.argsort(samples[1])[::-1]], samples[1][np.argsort(samples[1])[::-1]])[0]
+        sample_lists = []
+        for data in unlabeled_data:
+            sample_lists.append(uncertainty_sampling(classifier=classifier, 
+                                       X=[data], 
+                                       n_instances=int(np.ceil(num_to_annotate * 5 / len(unlabeled_data)))))
+
+        samples = (np.array(list(chain(*[sublist[0] for sublist in sample_lists]))).astype(int), list(chain(*[sublist[1] for sublist in sample_lists])))
+        samples_indices_sorted = np.argsort(samples[1])[::-1]
+        indices_all = samples[0][samples_indices_sorted]
         while num_to_annotate > 0 and indices_all.size > 0:
             indices = indices_all[:num_to_annotate]
             indices_all = indices_all[num_to_annotate:]
             predictions = classifier.predictions.flatten()
-            uncertain_samples = list(predictions[indices])
+            uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
             logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
             suggested_samples = list({sample["word"] for sample in uncertain_samples})
             num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples)
@@ -86,7 +92,9 @@ class ActiveLearning:
             if ".txt" in file_name
         ]
         logging.info(f"Text files found: {str([file.file_name for file in text_files])}")
-        
+
+        samples_added = set()
+
         for file in text_files:
             containing_words = file.contains(excerpts=samples)
             annotations = []
@@ -99,9 +107,10 @@ class ActiveLearning:
                                               excerpt=word_info[0]))
             annotation_file = AnnotationFile(file_name=annotation_file_name, 
                                              path=path_to_collection)
-            num_added = annotation_file.add_annotations(annotations=annotations)
+            added = annotation_file.add_annotations(annotations=annotations)
+            samples_added = samples_added.union(added)
 
-            return num_added
+        return len(samples_added)
 
     def check_file_change(self, path: str, file_names: list) -> str:
         """
@@ -206,6 +215,7 @@ class ActiveLearning:
 
         """
         probabilities = classifier.predict(X=X).flatten()
+        probabilities = list(chain(*probabilities))
         most_certain_predictions = {x['word'] for x in probabilities if x['score'] > CERTAINTY_THRESHOLD and x['entity'] != 'LABEL_0'}
 
         return most_certain_predictions

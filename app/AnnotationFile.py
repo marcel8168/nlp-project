@@ -69,7 +69,7 @@ class AnnotationFile:
             file.writelines(annotation_lines)
         logging.info(f"Wrote into {self.path + self.file_name}:\n" + str([ann.to_string(usage="info") for ann in annotations]))
 
-    def add_annotations(self, annotations: Iterable[Annotation], overwrite_existing: Optional[bool] = False) -> int:
+    def add_annotations(self, annotations: Iterable[Annotation], overwrite_existing: Optional[bool] = False) -> set[str]:
         """
         Add annotations to the annotation file object.
 
@@ -118,5 +118,5 @@ class AnnotationFile:
             with open(self.path + self.file_name, 'w') as file:
                 file.writelines(annotation_lines)
         
-        return len({ann.excerpt for ann in new_annotations})
+        return set(ann.excerpt for ann in new_annotations)
                 

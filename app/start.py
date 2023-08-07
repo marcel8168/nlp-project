@@ -1,8 +1,6 @@
 import argparse
 import logging
-import webbrowser
 from ActiveLearning import ActiveLearning
-# from Gui import GUI
 from SciBertClassifier import SciBertClassifier
 from System import System
 from TextFile import TextFile
@@ -81,16 +79,16 @@ if __name__ == "__main__":
 
         add_to_config(file_path="config/annotation.conf", type="entities", entities=[SUGGESTION_ANNOTATION_TYPE, args.label, "no-" + args.label])
         add_to_config(file_path="config/visual.conf", type="labels", entities=[SUGGESTION_ANNOTATION_TYPE + " | Annotation suggestion | TBA", args.label + " | " + args.label + " name | " + args.label[:2], "no-" + args.label + " | " + "no-" + args.label + " | no" + args.label[0]])
-        add_to_config(file_path="config/visual.conf", type="drawing", entities=["SPAN_DEFAULT	fgColor:black, bgColor:lightgreen, borderColor:darken", "ARC_DEFAULT	color:black, dashArray:-, arrowHead:triangle-5, labelArrow:none", SUGGESTION_ANNOTATION_TYPE + "	bgColor:lightsalmon"])
+        add_to_config(file_path="config/visual.conf", type="drawing", entities=["SPAN_DEFAULT	fgColor:black, bgColor:lightgreen, borderColor:darken", "ARC_DEFAULT	color:black, dashArray:-, arrowHead:triangle-5, labelArrow:none", SUGGESTION_ANNOTATION_TYPE + "	bgColor:lightsalmon", "no-" + args.label + "	bgColor:CornflowerBlue", args.label + "	bgColor:LightGreen"])
 
         system.copy_config_directory()
         system.start_brat()
         
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=args.path, folder_name=args.folder, collection_name=args.collection)
-        text = ""
+        texts = []
         for file_name in file_names:
             if ".txt" in file_name:
-                text += (TextFile(file_name=file_name, path=path_to_collection).read()) + " "
+                texts.append(TextFile(file_name=file_name, path=path_to_collection).read())
 
         classifier = SciBertClassifier(num_classes=args.num_suggestions, label=args.label, label_list=args.label_list, token_aggregation=args.token_aggregation)
         _, file_names = system.get_file_names_from_path(path_to_brat="./model", folder_name=None)
@@ -102,4 +100,4 @@ if __name__ == "__main__":
 
         active_learner = ActiveLearning()
         for i in range(args.iterations):
-            active_learner.iteration(classifier=classifier, unlabeled_data=[text], num_to_annotate=args.num_suggestions)
+            active_learner.iteration(classifier=classifier, unlabeled_data=texts, num_to_annotate=args.num_suggestions)

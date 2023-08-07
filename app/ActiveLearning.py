@@ -59,7 +59,7 @@ class ActiveLearning:
             self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
 
         dataset = Dataset(path_to_collection=path_to_collection)
-        if not dataset.dataset.empty:
+        if not dataset.dataset.size > 3:
             dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
             logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
             dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
@@ -148,14 +148,13 @@ class ActiveLearning:
         -------
             bool: True if there are suggestions left in any of the files, False otherwise.
         """
-        suggestions = []
         
         for file_name in file_names:
             if ".ann" in file_name:
-                annotation_list = AnnotationFile(file_name=file_name, path=path).read()
-                suggestions.extend([annotation for annotation in annotation_list if annotation.type == SUGGESTION_ANNOTATION_TYPE])
+                if AnnotationFile(file_name=file_name, path=path).suggestions_left():
+                    return True
         
-        return len(suggestions) > 0
+        return False
     
     def apply_annotation(self, path: str, file_names: str, changed_file: str) -> None:
         """
@@ -178,6 +177,7 @@ class ActiveLearning:
         distinct_file_names = {file_name[:-4] for file_name in file_names if ".txt" in file_name}
         annotation_file = AnnotationFile(file_name=changed_file, path=path)
         annotations = [ann for ann in annotation_file.read() if ann.type != SUGGESTION_ANNOTATION_TYPE]
+
         for annotation in annotations:
             excerpt = annotation.excerpt
 

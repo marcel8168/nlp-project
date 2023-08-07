@@ -9,4 +9,5 @@ services:
     volumes:
       - ./app/doc:/brat/doc
       - ./app/model:/brat/model
-      - ./app/model:/brat/evaluation
+      - ./app/evaluation:/brat/evaluation
+      - ./app/data:/brat/data

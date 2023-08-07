@@ -22,7 +22,7 @@ class TextFile:
         self.path = path
         self.text = text
 
-        nltk.download("punkt")
+        nltk.download("punkt", quiet=True)
 
     def read(self) -> str:
         """

@@ -117,7 +117,8 @@ class SciBertClassifier(BaseEstimator):
             BaseEstimator: The loaded BaseEstimator model.
         """
         path = path if path else self.path
-        self.model = load(path)
+        if os.path.exists(path):
+            self.model = load(path)
     
     def save(self, path: Optional[str] = "") -> None:
         """
@@ -351,28 +352,5 @@ class SciBertClassifier(BaseEstimator):
 
         metrics_df = pd.DataFrame(metrics, index=[0])
         metrics_df.to_csv(METRICS_FILE_PATH, mode='a', header=not os.path.exists(METRICS_FILE_PATH), index=False)
-
-        metrics_df = pd.read_csv(METRICS_FILE_PATH)
-
-        precision_list = metrics_df['precision']
-        recall_list = metrics_df['recall']
-        f1_list = metrics_df['f1']
-        accuracy_list = metrics_df['accuracy']
-
-        plt.plot(metrics_df.index, precision_list, label='Precision')
-        plt.plot(metrics_df.index, recall_list, label='Recall')
-        plt.plot(metrics_df.index, f1_list, label='F1-Score')
-        plt.plot(metrics_df.index, accuracy_list, label='Accuracy')
-
-        # Set labels and title
-        plt.xlabel('Iteration')
-        plt.ylabel('Metric Value')
-        plt.title('Training Metrics')
-
-        # Add legend
-        plt.legend()
-
-        # Show the chart
-        plt.show()
 
         return metrics

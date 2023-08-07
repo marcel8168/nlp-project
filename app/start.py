@@ -40,7 +40,7 @@ def add_to_config(file_path: str, type: str, entities: list):
         file.writelines(contents)
 
 if __name__ == "__main__":
-        logging.basicConfig(filename='example.log', filemode='w', level=logging.INFO)
+        logging.basicConfig(filename='process.log', filemode='w', level=logging.INFO)
         parser = argparse.ArgumentParser(description='Active Learning Toolset for NLP tasks')
 
         

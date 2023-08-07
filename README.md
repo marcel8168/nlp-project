@@ -7,7 +7,7 @@ Please note that this project has only been tested on Windows and Linux operatin
 
 1. Clone this repository
 ```
-    git clone -b dockerized-tool-set https://github.com/marcel8168/nlp-project.git
+    git clone -b dockerized-tool-set https://github.com/marcel8168/nlp-project.git al-tool-set
 ```
 2. Start the Docker Engine
 3. Build and run docker container

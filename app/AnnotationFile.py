@@ -3,6 +3,7 @@ import re
 from typing import Iterable, Optional
 from os import path
 from Annotation import Annotation
+from constants import SUGGESTION_ANNOTATION_TYPE
 
 
 class AnnotationFile:
@@ -120,3 +121,18 @@ class AnnotationFile:
         
         return set(ann.excerpt for ann in new_annotations)
                 
+    def suggestions_left(self) -> bool:
+        """
+        Checks if there are any suggestions left in the annotation file.
+
+        Returns
+        -------
+            bool: True if there are suggestions left in the file, False otherwise.
+        """
+        full_path = self.path + self.file_name
+
+        with open(full_path, "r", encoding="utf-8") as file:
+            if any(SUGGESTION_ANNOTATION_TYPE in line.strip() for line in file):
+                return True
+
+        return False

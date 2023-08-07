@@ -1,8 +1,9 @@
+from itertools import chain
 import logging
 import os
 import re
 import time
-from typing import Iterable, Optional, Union
+from typing import Iterable, Union
 from modAL.uncertainty import uncertainty_sampling
 import sklearn
 import numpy as np
@@ -10,7 +11,6 @@ from datasets import load_dataset
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from Dataset import Dataset
-from Gui import GUI
 from System import System
 from TextFile import TextFile
 
@@ -28,18 +28,22 @@ class ActiveLearning:
     def iteration(self, classifier: sklearn.base.BaseEstimator,
                   unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
-        gui = GUI()
         system = System()
         
-        samples = uncertainty_sampling(classifier=classifier, 
-                                       X=unlabeled_data, 
-                                       n_instances=num_to_annotate * 5)
-        indices_all = (samples[0][np.argsort(samples[1])[::-1]], samples[1][np.argsort(samples[1])[::-1]])[0]
+        sample_lists = []
+        for data in unlabeled_data:
+            sample_lists.append(uncertainty_sampling(classifier=classifier, 
+                                       X=[data], 
+                                       n_instances=int(np.ceil(num_to_annotate * 5 / len(unlabeled_data)))))
+
+        samples = (np.array(list(chain(*[sublist[0] for sublist in sample_lists]))).astype(int), list(chain(*[sublist[1] for sublist in sample_lists])))
+        samples_indices_sorted = np.argsort(samples[1])[::-1]
+        indices_all = samples[0][samples_indices_sorted]
         while num_to_annotate > 0 and indices_all.size > 0:
             indices = indices_all[:num_to_annotate]
             indices_all = indices_all[num_to_annotate:]
             predictions = classifier.predictions.flatten()
-            uncertain_samples = list(predictions[indices])
+            uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
             logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
             suggested_samples = list({sample["word"] for sample in uncertain_samples})
             num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples)
@@ -47,23 +51,12 @@ class ActiveLearning:
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
         self.add_samples_to_annotation_files(samples=most_certain_predictions)
 
-        title = "Suggestions loaded"
-        message = "Suggestions has been loaded. You can now start annotating.\n\nInfo:\nAnnotation suggestions by the Active Learning process will be marked red. Whenever a change was done, BRAT will reload to apply changes on identical cases."
-        gui.show_custom_popup(title, message)
-        system.reload()
-
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
         while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
             annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
             changed_file = self.check_file_change(path=path_to_collection, file_names=annotation_files)
             self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
-            system.reload()
-
-        logging.info("Annotation by domain expert finished. No suggestions left.")
-        title = "Annotation finished"
-        message = "You finished the current annotation step.\n\nNow the next training iteration began. Please do not change any file until the next call."
-        gui.show_custom_popup(title, message)
 
         dataset = Dataset(path_to_collection=path_to_collection)
         if not dataset.dataset.empty:
@@ -99,7 +92,9 @@ class ActiveLearning:
             if ".txt" in file_name
         ]
         logging.info(f"Text files found: {str([file.file_name for file in text_files])}")
-        
+
+        samples_added = set()
+
         for file in text_files:
             containing_words = file.contains(excerpts=samples)
             annotations = []
@@ -112,9 +107,10 @@ class ActiveLearning:
                                               excerpt=word_info[0]))
             annotation_file = AnnotationFile(file_name=annotation_file_name, 
                                              path=path_to_collection)
-            num_added = annotation_file.add_annotations(annotations=annotations)
+            added = annotation_file.add_annotations(annotations=annotations)
+            samples_added = samples_added.union(added)
 
-            return num_added
+        return len(samples_added)
 
     def check_file_change(self, path: str, file_names: list) -> str:
         """
@@ -219,6 +215,7 @@ class ActiveLearning:
 
         """
         probabilities = classifier.predict(X=X).flatten()
+        probabilities = list(chain(*probabilities))
         most_certain_predictions = {x['word'] for x in probabilities if x['score'] > CERTAINTY_THRESHOLD and x['entity'] != 'LABEL_0'}
 
         return most_certain_predictions

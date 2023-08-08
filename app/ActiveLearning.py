@@ -13,8 +13,7 @@ from AnnotationFile import AnnotationFile
 from Dataset import Dataset
 from System import System
 from TextFile import TextFile
-
-from constants import CERTAINTY_THRESHOLD, DATA_PATH, EXTERNAL_TEST_DATASET_FILE_NAME, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE, TRAINING_DATASET_FILE_NAME
+from constants import CERTAINTY_THRESHOLD, DATA_PATH, EXTERNAL_TEST_DATASET_FILE_NAME, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE, TRAINING_DATASET_FILE_NAME, TARGET_CLASS
 
 
 class ActiveLearning:
@@ -46,20 +45,21 @@ class ActiveLearning:
             uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
             logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
             suggested_samples = list({sample["word"] for sample in uncertain_samples})
-            num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples)
+            num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples, type=SUGGESTION_ANNOTATION_TYPE)
 
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
-        self.add_samples_to_annotation_files(samples=most_certain_predictions)
+        if most_certain_predictions:
+            self.add_samples_to_annotation_files(samples=most_certain_predictions, type=TARGET_CLASS)
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
-        file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
-        while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
-            annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
-            changed_file = self.check_file_change(path=path_to_collection, file_names=annotation_files)
-            self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
+        annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
+        while self.suggestions_left_in_files(path=path_to_collection, file_names=annotation_files):
+            self.check_file_change(path=path_to_collection, file_names=annotation_files)
+        for annotation_file in annotation_files:
+            self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=annotation_file)
 
         dataset = Dataset(path_to_collection=path_to_collection)
-        if not dataset.dataset.size > 3:
+        if not dataset.dataset.empty:
             dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
             logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
             dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
@@ -75,7 +75,7 @@ class ActiveLearning:
 
         classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     
-    def add_samples_to_annotation_files(self, samples: Iterable[str]) -> int:
+    def add_samples_to_annotation_files(self, samples: Iterable[str], type: str) -> int:
         """
         Adds samples to annotation files.
 
@@ -93,24 +93,27 @@ class ActiveLearning:
         ]
         logging.info(f"Text files found: {str([file.file_name for file in text_files])}")
 
-        samples_added = set()
+        added_annotations = set()
 
         for file in text_files:
             containing_words = file.contains(excerpts=samples)
+            if type == SUGGESTION_ANNOTATION_TYPE:
+                containing_words = [item for item in containing_words if item[0].lower() not in added_annotations]
             annotations = []
             annotation_file_name = file.file_name[:file.file_name.find(".")] + ".ann"
             for word_info in containing_words:
-                annotations.append(Annotation(file_name=annotation_file_name, 
-                                              type=SUGGESTION_ANNOTATION_TYPE, 
-                                              begin=word_info[1], 
-                                              end=word_info[2], 
-                                              excerpt=word_info[0]))
+                if not word_info[0].lower() in {ann.excerpt.lower() for ann in annotations}:
+                    annotations.append(Annotation(file_name=annotation_file_name, 
+                                                type=type, 
+                                                begin=word_info[1], 
+                                                end=word_info[2], 
+                                                excerpt=word_info[0]))
             annotation_file = AnnotationFile(file_name=annotation_file_name, 
                                              path=path_to_collection)
             added = annotation_file.add_annotations(annotations=annotations)
-            samples_added = samples_added.union(added)
+            added_annotations = added_annotations.union(added)
 
-        return len(samples_added)
+        return len(added_annotations)
 
     def check_file_change(self, path: str, file_names: list) -> str:
         """

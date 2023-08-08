@@ -119,7 +119,7 @@ class AnnotationFile:
             with open(self.path + self.file_name, 'w') as file:
                 file.writelines(annotation_lines)
         
-        return set(ann.excerpt for ann in new_annotations)
+        return set(ann.excerpt.lower() for ann in new_annotations)
                 
     def suggestions_left(self) -> bool:
         """

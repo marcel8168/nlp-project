@@ -8,6 +8,7 @@ from modAL.uncertainty import uncertainty_sampling
 import sklearn
 import numpy as np
 from datasets import load_dataset
+from sklearn.base import BaseEstimator
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from Dataset import Dataset
@@ -31,7 +32,7 @@ class ActiveLearning:
         
         sample_lists = []
         for data in unlabeled_data:
-            sample_lists.append(uncertainty_sampling(classifier=classifier, 
+            sample_lists.append(self.uncertainty_sampling_by_target_class(classifier=classifier, 
                                        X=[data], 
                                        n_instances=int(np.ceil(num_to_annotate * 5 / len(unlabeled_data)))))
 
@@ -223,3 +224,28 @@ class ActiveLearning:
         most_certain_predictions = {x['word'] for x in probabilities if x['score'] > CERTAINTY_THRESHOLD and x['entity'] != 'LABEL_0'}
 
         return most_certain_predictions
+    
+    def uncertainty_sampling_by_target_class(self, classifier: BaseEstimator, X, n_instances: int = 1):
+        """
+        Uncertainty sampling query strategy. Selects the least sure instances for labelling w.r.t. the target class.
+
+        Arguments
+        ---------
+            classifier: The classifier for which the labels are to be queried.
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            The indices of the instances from X chosen to be labelled.
+            The uncertainty metric of the chosen instances. 
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        absolute_diff = np.abs(target_class_prob - 0.5) 
+        sorted_indices = np.argsort(absolute_diff)
+        nearest_indices = sorted_indices[:n_instances] 
+        nearest_values = target_class_prob[nearest_indices]
+
+        return (nearest_indices, nearest_values)

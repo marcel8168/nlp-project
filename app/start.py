@@ -59,8 +59,8 @@ if __name__ == "__main__":
         parser.add_argument('--folder', type=str, default=FOLDER_NAME,
                             help=f'Name of the destination folder (default: {FOLDER_NAME})')
         
-        parser.add_argument('--num_suggestions', type=int, default=10,
-                            help='Number of suggestions to be made by the Active Learning functionality (default: 3)')
+        parser.add_argument('--num_suggestions', type=int, default=20,
+                            help='Number of suggestions to be made by the Active Learning functionality (default: 20)')
         
         parser.add_argument('--token_aggregation', type=str, default='max',
                             help='Strategy that is used for token probability aggregation (default: max)')

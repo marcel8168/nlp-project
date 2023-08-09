@@ -219,11 +219,16 @@ class SciBertClassifier(BaseEstimator):
         -------
             numpy.ndarray of shape (n_samples,): The predicted class probabilities.
         """
-        predictions = self.predict(X=X)
-        predictions = np.array([[data["score"] for data in dataset] for dataset in predictions]).flatten()
-        counter_predictions = 1 - predictions.copy()
+        predictions = self.predict(X=X).flatten()
+        score_list = []
+
+        for pred in predictions:
+            if "label_0" in pred['entity'].lower():
+                score_list.append([pred['score'], 1 - pred['score']])
+            else:
+                score_list.append([1 - pred['score'], pred['score']])
         
-        return np.c_[predictions, counter_predictions]
+        return np.array(score_list)
 
     
 

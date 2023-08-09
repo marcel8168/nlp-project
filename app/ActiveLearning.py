@@ -59,9 +59,10 @@ class ActiveLearning:
             self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=annotation_file)
 
         dataset = Dataset(path_to_collection=path_to_collection)
-        if not dataset.dataset.empty:
-            dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
-            logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+        dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
+        logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+        
+        if dataset.dataset.shape[0] > 3:
             dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
             split_dataset = dataset["train"].train_test_split()
             labeled_dataset = split_dataset.map(classifier.generate_row_labels)

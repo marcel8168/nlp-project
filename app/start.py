@@ -90,7 +90,7 @@ if __name__ == "__main__":
             if ".txt" in file_name:
                 texts.append(TextFile(file_name=file_name, path=path_to_collection).read())
 
-        classifier = SciBertClassifier(num_classes=args.num_suggestions, label=args.label, label_list=args.label_list, token_aggregation=args.token_aggregation)
+        classifier = SciBertClassifier(num_classes=len(args.label_list), label=args.label, label_list=args.label_list, token_aggregation=args.token_aggregation)
         _, file_names = system.get_file_names_from_path(path_to_brat="./model", folder_name=None)
         if file_names:
             classifier.load()

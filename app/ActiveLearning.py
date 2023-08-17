@@ -29,10 +29,11 @@ class ActiveLearning:
                   unlabeled_data: Union[list, np.ndarray],
                   num_to_annotate: int = 1):
         system = System()
-        
+        classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
+
         sample_lists = []
         for data in unlabeled_data:
-            sample_lists.append(self.uncertainty_sampling_by_target_class(classifier=classifier, 
+            sample_lists.append(self.certainty_sampling_by_target_class(classifier=classifier, 
                                        X=[data], 
                                        n_instances=int(np.ceil(num_to_annotate * 5 / len(unlabeled_data)))))
 
@@ -74,8 +75,6 @@ class ActiveLearning:
 
             classifier.save()
             logging.info("Pretrained model saved.")
-
-        classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     
     def add_samples_to_annotation_files(self, samples: Iterable[str], type: str) -> int:
         """
@@ -246,6 +245,30 @@ class ActiveLearning:
         absolute_diff = np.abs(target_class_prob - 0.5) 
         sorted_indices = np.argsort(absolute_diff)
         nearest_indices = sorted_indices[:n_instances] 
+        nearest_values = target_class_prob[nearest_indices]
+
+        return (nearest_indices, nearest_values)
+    
+    def certainty_sampling_by_target_class(self, classifier: BaseEstimator, X, n_instances: int = 1):
+        """
+        Certainty sampling query strategy. Selects the surest instances for labelling w.r.t. the target class.
+
+        Arguments
+        ---------
+            classifier: The classifier for which the labels are to be queried.
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            The indices of the instances from X chosen to be labelled.
+            The certainty metric of the chosen instances. 
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        sorted_indices = np.argsort(target_class_prob)
+        nearest_indices = sorted_indices[:-n_instances] 
         nearest_values = target_class_prob[nearest_indices]
 
         return (nearest_indices, nearest_values)

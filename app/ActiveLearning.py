@@ -191,8 +191,8 @@ class ActiveLearning:
 
                 for idx, sentence in enumerate(sentences["sentence"]):
                     pattern = r'\b{}\b'.format(excerpt)
-                    match = re.search(pattern, sentence, re.IGNORECASE)
-                    if match:
+                    matches = re.finditer(pattern, sentence, re.IGNORECASE)
+                    for match in matches:
                         new_annotations.append(
                             Annotation(file_name=text_file + ".ann",
                                         type=annotation.type,

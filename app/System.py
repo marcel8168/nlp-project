@@ -11,6 +11,7 @@ import constants
 
 class System:
     def __init__(self) -> None:
+        # Determine the operating system for path handling
         self.operating_system = platform.system()
         self.slash = "\\" if self.operating_system.lower() == "windows" else "/"
         pass
@@ -38,6 +39,13 @@ class System:
         return collection_path, file_names
     
     def start_docker(self) -> None:
+        """
+        Starts the Docker container.
+
+        Raises
+        ------
+            subprocess.CalledProcessError: If an error occurs while starting the Docker container.
+        """
         try:
             if self.operating_system.lower() == "windows":
                 subprocess.Popen(['start', 'cmd', '/c', 'docker compose up'], shell=True)
@@ -49,6 +57,13 @@ class System:
             print(f"Error: {e}")
 
     def terminate_docker(self) -> None:
+        """
+        Terminates the Docker container.
+
+        Raises
+        ------
+            subprocess.CalledProcessError: If an error occurs while terminating the Docker container.
+        """
         try:
             if self.operating_system.lower() == "windows":
                 subprocess.Popen(['start', 'cmd', '/c', 'docker compose down'], shell=True)
@@ -109,10 +124,14 @@ class System:
                 if not name.startswith('__'):
                     file.write(f"{name} = {repr(val)}\n")
 
-    # def reload(self) -> None:
-    #     pyautogui.hotkey('F5')
-
     def copy_config_directory(self) -> None:
+        """
+        Copies the configuration directory to the destination.
+
+        Raises
+        ------
+            Exception: If an error occurs during the copying process.
+        """
         source_dir = "./config/"
         destination_dir = "../brat/"
 
@@ -128,6 +147,13 @@ class System:
             print(f"An error occurred while copying the directory: {e}")
 
     def start_brat(self) -> None:
+        """
+        Starts the BRAT server using the standalone.py script.
+
+        Raises
+        ------
+            subprocess.CalledProcessError: If an error occurs while starting the BRAT server.
+        """
         try:
             subprocess.Popen(["python", "standalone.py"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except subprocess.CalledProcessError as e:

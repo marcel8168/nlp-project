@@ -268,7 +268,7 @@ class ActiveLearning:
         target_class_prob = probabilities.T[1]
 
         sorted_indices = np.argsort(target_class_prob)
-        nearest_indices = sorted_indices[:-n_instances] 
+        nearest_indices = sorted_indices[-n_instances:] 
         nearest_values = target_class_prob[nearest_indices]
 
         return (nearest_indices, nearest_values)

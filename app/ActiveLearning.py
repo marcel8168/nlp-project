@@ -4,7 +4,7 @@ import os
 import re
 import time
 from typing import Iterable, Union
-from modAL.uncertainty import uncertainty_sampling
+from modAL import uncertainty
 import sklearn
 import numpy as np
 from datasets import load_dataset
@@ -32,22 +32,27 @@ class ActiveLearning:
         classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
 
         sample_lists = []
-        for data in unlabeled_data:
-            sample_lists.append(self.certainty_sampling_by_target_class(classifier=classifier, 
-                                       X=[data], 
-                                       n_instances=int(np.ceil(num_to_annotate * 5 / len(unlabeled_data)))))
+        n = num_to_annotate
+        while num_to_annotate > 0:
+            for data in unlabeled_data:
+                samples = uncertainty.margin_sampling(classifier=classifier,
+                                                        X=[data],
+                                                        n_instances=n)
+                sample_lists.append(samples)
 
-        samples = (np.array(list(chain(*[sublist[0] for sublist in sample_lists]))).astype(int), list(chain(*[sublist[1] for sublist in sample_lists])))
-        samples_indices_sorted = np.argsort(samples[1])[::-1]
-        indices_all = samples[0][samples_indices_sorted]
-        while num_to_annotate > 0 and indices_all.size > 0:
-            indices = indices_all[:num_to_annotate]
-            indices_all = indices_all[num_to_annotate:]
-            predictions = classifier.predictions.flatten()
-            uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
-            logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
-            suggested_samples = list({sample["word"] for sample in uncertain_samples})
-            num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples, type=SUGGESTION_ANNOTATION_TYPE)
+            samples = (np.array(list(chain(*[sublist[0] for sublist in sample_lists]))).astype(int), list(chain(*[sublist[1] for sublist in sample_lists])))
+            samples_indices_sorted = np.argsort(samples[1])[::-1]
+            indices_all = samples[0][samples_indices_sorted]
+            while num_to_annotate > 0 and indices_all.size > 0:
+                indices = indices_all[:num_to_annotate]
+                indices_all = indices_all[num_to_annotate:]
+                predictions = classifier.predictions.flatten()
+                uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
+                logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
+                suggested_samples = list({sample["word"] for sample in uncertain_samples})
+                num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples, type=SUGGESTION_ANNOTATION_TYPE)
+            
+            n += 1
 
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
         if most_certain_predictions:

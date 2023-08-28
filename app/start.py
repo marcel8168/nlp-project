@@ -112,11 +112,6 @@ if __name__ == "__main__":
     if file_names:
         classifier.load()
 
-    # Set up BRAT URL for annotation visualization
-    url = "http://localhost:8001/index.xhtml#/"
-    url += args.collection + "/" if args.collection else ""
-    url += args.folder + "/" if args.folder else ""
-
     # Active Learning iterations
     active_learner = ActiveLearning()
     for i in range(args.iterations):

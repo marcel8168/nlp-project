@@ -272,3 +272,25 @@ class ActiveLearning:
         nearest_values = target_class_prob[nearest_indices]
 
         return (nearest_indices, nearest_values)
+    
+    def random_sampling(self, classifier,  X, n_instances: int = 1):
+        """
+        Random sampling query strategy. Selects instances randomly.
+
+        Arguments
+        ---------
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            Randomly chosen indices of the instances from X to be labelled.
+            A placeholder for certainty metric (since this is random sampling).
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        n_samples = target_class_prob.shape[0]
+        random_indices = np.random.choice(n_samples, size=n_instances, replace=False)
+
+        return (random_indices, np.zeros(n_instances,))

@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "NLP Project",
+            "type": "python",
+            "request": "launch",
+            "program": "start.py",
+            "console": "integratedTerminal",
+            "args": [
+                "--label",
+                "drug",
+                "--label_list",
+                "O",
+                "B-drug",
+                "I-drug",
+                "--certainty_threshold",
+                "1.0"
+            ],
+            "cwd": "${workspaceFolder}/app"
+        }
+    ]
+}

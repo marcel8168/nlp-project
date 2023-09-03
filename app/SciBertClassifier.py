@@ -296,6 +296,17 @@ class SciBertClassifier(BaseEstimator):
         return probabilities
     
     def performance_report(self, path_to_test_set: str):
+        """
+        Generates a performance report based on predictions and ground truth labels.
+
+        Arguments
+        ---------
+            path_to_test_set (str): The path to the test set data in JSON format.
+
+        Returns
+        -------
+            dict: A dictionary containing performance metrics, including accuracy, precision, recall, F1-score
+        """
         predictions = []
         ground_truth = []
 
@@ -315,6 +326,9 @@ class SciBertClassifier(BaseEstimator):
         return metrics
     
     def create_metrics_file(self) -> None:
+        """
+        Creates an empty metrics file with predefined metric placeholders.
+        """
         metrics = {
             "precision": 0.0,
             "recall": 0.0,

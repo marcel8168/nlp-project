@@ -88,6 +88,10 @@ class ActiveLearning:
         Arguments
         ---------
             samples (Iterable[str]): Samples to add to annotation files
+
+        Returns
+        -------
+            int: Number of added annotations
         """
         system = System()
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)

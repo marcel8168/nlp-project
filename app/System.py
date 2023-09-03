@@ -10,6 +10,16 @@ import constants
 
 
 class System:
+    """
+    The System class manages system-related operations for the active learning toolset.
+    This class provides methods for interacting with the operating system, managing constants,
+    copying configuration files, starting and terminating Docker containers, and initiating the BRAT server.
+
+    Attributes
+    ----------
+        operating_system (str): The name of the operating system (e.g., "Windows", "Linux").
+        slash (str): The path separator used by the operating system.
+    """
     def __init__(self) -> None:
         # Determine the operating system for path handling
         self.operating_system = platform.system()

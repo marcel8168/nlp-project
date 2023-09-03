@@ -81,6 +81,7 @@ class AnnotationFile:
         """
         existing_annotations = self.read()
 
+        # only add new annotation that do not intersect other annotations
         if existing_annotations:
             new_annotations = {
                 annotation
@@ -98,6 +99,7 @@ class AnnotationFile:
         else:
             new_annotations = set(annotations)
 
+        # set id
         highest_id_num = max(int(re.search(r"\d+", ann.id).group()) for ann in existing_annotations) if existing_annotations else 0
         for annotation in new_annotations:
             if not annotation.id:
@@ -107,6 +109,7 @@ class AnnotationFile:
             logging.info("Adding annotations.")
             self.write(new_annotations)
 
+        # overwriting existing annotations
         if overwrite_existing:
             existing_annotations = self.read()
             for existing_ann in existing_annotations[:highest_id_num]:

@@ -5,11 +5,10 @@ import evaluate
 from joblib import dump, load
 from datasets import load_dataset
 import pandas as pd
-from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline
+from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline, logging
 from sklearn.base import BaseEstimator
 import numpy as np
-from datasets import Dataset
-import matplotlib.pyplot as plt
+import datasets
 
 from constants import METRICS_FILE_PATH, TARGET_CLASS
 
@@ -72,7 +71,7 @@ class SciBertClassifier(BaseEstimator):
             Loads a saved model from the specified path.
     """
 
-    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1, path="", token_aggregation=""):
+    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=0, path="", token_aggregation=""):
         self.metric = evaluate.load("seqeval")
         
         self.model_checkpoint = "allenai/scibert_scivocab_uncased"
@@ -81,6 +80,12 @@ class SciBertClassifier(BaseEstimator):
 
         self.label = label
         self.label_list = label_list
+
+        logging.disable_default_handler()
+        logging.disable_progress_bar()
+        logging.disable_propagation()
+        datasets.logging.disable_propagation()
+        datasets.logging.disable_progress_bar()
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_checkpoint)
         self.model = AutoModelForTokenClassification.from_pretrained(self.model_checkpoint, num_labels=num_classes)
@@ -97,6 +102,7 @@ class SciBertClassifier(BaseEstimator):
             per_device_eval_batch_size=batch_size,
             num_train_epochs=num_epochs,
             weight_decay=weight_decay,
+            logging_strategy='no',
             logging_steps=logging_steps
         )
 
@@ -180,7 +186,7 @@ class SciBertClassifier(BaseEstimator):
         
         return tokens
 
-    def fit(self, X: Dataset) -> BaseEstimator:
+    def fit(self, X: datasets.Dataset) -> BaseEstimator:
         """
         Fits the model to the training data and performs training.
 

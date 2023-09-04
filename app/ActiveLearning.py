@@ -35,7 +35,7 @@ class ActiveLearning:
         n = num_to_annotate
         while num_to_annotate > 0:
             for data in unlabeled_data:
-                samples = uncertainty.margin_sampling(classifier=classifier,
+                samples = uncertainty.uncertainty_sampling(classifier=classifier,
                                                         X=[data],
                                                         n_instances=n)
                 sample_lists.append(samples)
@@ -58,10 +58,17 @@ class ActiveLearning:
         if most_certain_predictions:
             self.add_samples_to_annotation_files(samples=most_certain_predictions, type=TARGET_CLASS)
 
+        # User information
+        print("USER INFO: You can now start annotating: http://localhost:8001/")
+
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
         annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
         while self.suggestions_left_in_files(path=path_to_collection, file_names=annotation_files):
             self.check_file_change(path=path_to_collection, file_names=annotation_files)
+
+        # User information
+        print("USER INFO: All suggestions have been annotated. New suggestions are being loaded...")
+
         for annotation_file in annotation_files:
             self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=annotation_file)
 

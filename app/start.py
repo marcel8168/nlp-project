@@ -115,5 +115,7 @@ if __name__ == "__main__":
     # Active Learning iterations
     active_learner = ActiveLearning()
     for i in range(args.iterations):
+        # User information
+        print(f"USER INFO: Iteration {i+1}/{args.iterations} has started.")
         active_learner.iteration(classifier=classifier, unlabeled_data=texts, 
                                  num_to_annotate=args.num_suggestions)

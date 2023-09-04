@@ -35,7 +35,7 @@ class ActiveLearning:
         n = num_to_annotate
         while num_to_annotate > 0:
             for data in unlabeled_data:
-                samples = uncertainty.uncertainty_sampling(classifier=classifier,
+                samples = self.certainty_sampling_by_target_class(classifier=classifier,
                                                         X=[data],
                                                         n_instances=n)
                 sample_lists.append(samples)

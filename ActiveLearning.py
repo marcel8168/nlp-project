@@ -1,20 +1,21 @@
+from itertools import chain
 import logging
 import os
 import re
 import time
-from typing import Iterable, Optional, Union
-from modAL.uncertainty import uncertainty_sampling
+from typing import Iterable, Union
+from modAL import uncertainty
 import sklearn
 import numpy as np
 from datasets import load_dataset
+from sklearn.base import BaseEstimator
 from Annotation import Annotation
 from AnnotationFile import AnnotationFile
 from Dataset import Dataset
 from Gui import GUI
 from System import System
 from TextFile import TextFile
-
-from constants import CERTAINTY_THRESHOLD, DATA_PATH, EXTERNAL_TEST_DATASET_FILE_NAME, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE, TRAINING_DATASET_FILE_NAME
+from constants import CERTAINTY_THRESHOLD, DATA_PATH, EXTERNAL_TEST_DATASET_FILE_NAME, FOLDER_NAME, PATH_TO_BRAT, COLLECTION_NAME, SUGGESTION_ANNOTATION_TYPE, TRAINING_DATASET_FILE_NAME, TARGET_CLASS
 
 
 class ActiveLearning:
@@ -30,45 +31,60 @@ class ActiveLearning:
                   num_to_annotate: int = 1):
         gui = GUI()
         system = System()
-        
-        samples = uncertainty_sampling(classifier=classifier, 
-                                       X=unlabeled_data, 
-                                       n_instances=num_to_annotate * 5)
-        indices_all = (samples[0][np.argsort(samples[1])[::-1]], samples[1][np.argsort(samples[1])[::-1]])[0]
-        while num_to_annotate > 0 and indices_all.size > 0:
-            indices = indices_all[:num_to_annotate]
-            indices_all = indices_all[num_to_annotate:]
-            predictions = classifier.predictions.flatten()
-            uncertain_samples = list(predictions[indices])
-            logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
-            suggested_samples = list({sample["word"] for sample in uncertain_samples})
-            num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples)
+        classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
+
+        sample_lists = []
+        n = num_to_annotate
+        while num_to_annotate > 0:
+            for data in unlabeled_data:
+                samples = self.certainty_sampling_by_target_class(classifier=classifier,
+                                                        X=[data],
+                                                        n_instances=n)
+                sample_lists.append(samples)
+
+            samples = (np.array(list(chain(*[sublist[0] for sublist in sample_lists]))).astype(int), list(chain(*[sublist[1] for sublist in sample_lists])))
+            samples_indices_sorted = np.argsort(samples[1])[::-1]
+            indices_all = samples[0][samples_indices_sorted]
+            while num_to_annotate > 0 and indices_all.size > 0:
+                indices = indices_all[:num_to_annotate]
+                indices_all = indices_all[num_to_annotate:]
+                predictions = classifier.predictions.flatten()
+                uncertain_samples = list(filter(lambda x: x['index'] in indices, predictions))
+                logging.info(f"Suggested samples to be annotated: {uncertain_samples}")
+                suggested_samples = list({sample["word"] for sample in uncertain_samples})
+                num_to_annotate -= self.add_samples_to_annotation_files(samples=suggested_samples, type=SUGGESTION_ANNOTATION_TYPE)
+            
+            n += 1
 
         most_certain_predictions = self.get_most_certain_predictions(classifier=classifier, X=unlabeled_data)
-        self.add_samples_to_annotation_files(samples=most_certain_predictions)
+        if most_certain_predictions:
+            self.add_samples_to_annotation_files(samples=most_certain_predictions, type=TARGET_CLASS)
 
+        # User information
         title = "Suggestions loaded"
         message = "Suggestions has been loaded. You can now start annotating.\n\nInfo:\nAnnotation suggestions by the Active Learning process will be marked red. Whenever a change was done, BRAT will reload to apply changes on identical cases."
         gui.show_custom_popup(title, message)
         system.reload()
 
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
-        file_names = [file_name for file_name in file_names if ".ann" in file_name or ".txt" in file_name]
-        while self.suggestions_left_in_files(path=path_to_collection, file_names=file_names):
-            annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
-            changed_file = self.check_file_change(path=path_to_collection, file_names=annotation_files)
-            self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=changed_file)
-            system.reload()
+        annotation_files = [file_name for file_name in file_names if ".ann" in file_name]
+        while self.suggestions_left_in_files(path=path_to_collection, file_names=annotation_files):
+            self.check_file_change(path=path_to_collection, file_names=annotation_files)
 
+        # User information
         logging.info("Annotation by domain expert finished. No suggestions left.")
         title = "Annotation finished"
         message = "You finished the current annotation step.\n\nNow the next training iteration began. Please do not change any file until the next call."
         gui.show_custom_popup(title, message)
 
+        for annotation_file in annotation_files:
+            self.apply_annotation(path=path_to_collection, file_names=file_names, changed_file=annotation_file)
+
         dataset = Dataset(path_to_collection=path_to_collection)
-        if not dataset.dataset.empty:
-            dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
-            logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+        dataset.to_json(DATA_PATH, TRAINING_DATASET_FILE_NAME)
+        logging.info(f"Updated dataset with new annotations is generated and saved under {DATA_PATH + TRAINING_DATASET_FILE_NAME}")
+        
+        if dataset.dataset.shape[0] > 3:
             dataset = load_dataset("json", data_files=DATA_PATH + TRAINING_DATASET_FILE_NAME)
             split_dataset = dataset["train"].train_test_split()
             labeled_dataset = split_dataset.map(classifier.generate_row_labels)
@@ -79,16 +95,18 @@ class ActiveLearning:
 
             classifier.save()
             logging.info("Pretrained model saved.")
-
-        classifier.performance_report(path_to_test_set=DATA_PATH + EXTERNAL_TEST_DATASET_FILE_NAME)
     
-    def add_samples_to_annotation_files(self, samples: Iterable[str]) -> int:
+    def add_samples_to_annotation_files(self, samples: Iterable[str], type: str) -> int:
         """
         Adds samples to annotation files.
 
         Arguments
         ---------
             samples (Iterable[str]): Samples to add to annotation files
+
+        Returns
+        -------
+            int: Number of added annotations
         """
         system = System()
         path_to_collection, file_names = system.get_file_names_from_path(path_to_brat=PATH_TO_BRAT, folder_name=FOLDER_NAME, collection_name=COLLECTION_NAME)
@@ -99,22 +117,28 @@ class ActiveLearning:
             if ".txt" in file_name
         ]
         logging.info(f"Text files found: {str([file.file_name for file in text_files])}")
-        
+
+        added_annotations = set()
+
         for file in text_files:
             containing_words = file.contains(excerpts=samples)
+            if type == SUGGESTION_ANNOTATION_TYPE:
+                containing_words = [item for item in containing_words if item[0].lower() not in added_annotations]
             annotations = []
             annotation_file_name = file.file_name[:file.file_name.find(".")] + ".ann"
             for word_info in containing_words:
-                annotations.append(Annotation(file_name=annotation_file_name, 
-                                              type=SUGGESTION_ANNOTATION_TYPE, 
-                                              begin=word_info[1], 
-                                              end=word_info[2], 
-                                              excerpt=word_info[0]))
+                if not word_info[0].lower() in {ann.excerpt.lower() for ann in annotations}:
+                    annotations.append(Annotation(file_name=annotation_file_name, 
+                                                type=type, 
+                                                begin=word_info[1], 
+                                                end=word_info[2], 
+                                                excerpt=word_info[0]))
             annotation_file = AnnotationFile(file_name=annotation_file_name, 
                                              path=path_to_collection)
-            num_added = annotation_file.add_annotations(annotations=annotations)
+            added = annotation_file.add_annotations(annotations=annotations)
+            added_annotations = added_annotations.union(added)
 
-            return num_added
+        return len(added_annotations)
 
     def check_file_change(self, path: str, file_names: list) -> str:
         """
@@ -152,14 +176,13 @@ class ActiveLearning:
         -------
             bool: True if there are suggestions left in any of the files, False otherwise.
         """
-        suggestions = []
         
         for file_name in file_names:
             if ".ann" in file_name:
-                annotation_list = AnnotationFile(file_name=file_name, path=path).read()
-                suggestions.extend([annotation for annotation in annotation_list if annotation.type == SUGGESTION_ANNOTATION_TYPE])
+                if AnnotationFile(file_name=file_name, path=path).suggestions_left():
+                    return True
         
-        return len(suggestions) > 0
+        return False
     
     def apply_annotation(self, path: str, file_names: str, changed_file: str) -> None:
         """
@@ -182,6 +205,7 @@ class ActiveLearning:
         distinct_file_names = {file_name[:-4] for file_name in file_names if ".txt" in file_name}
         annotation_file = AnnotationFile(file_name=changed_file, path=path)
         annotations = [ann for ann in annotation_file.read() if ann.type != SUGGESTION_ANNOTATION_TYPE]
+
         for annotation in annotations:
             excerpt = annotation.excerpt
 
@@ -191,8 +215,8 @@ class ActiveLearning:
 
                 for idx, sentence in enumerate(sentences["sentence"]):
                     pattern = r'\b{}\b'.format(excerpt)
-                    match = re.search(pattern, sentence, re.IGNORECASE)
-                    if match:
+                    matches = re.finditer(pattern, sentence, re.IGNORECASE)
+                    for match in matches:
                         new_annotations.append(
                             Annotation(file_name=text_file + ".ann",
                                         type=annotation.type,
@@ -219,6 +243,78 @@ class ActiveLearning:
 
         """
         probabilities = classifier.predict(X=X).flatten()
+        probabilities = list(chain(*probabilities))
         most_certain_predictions = {x['word'] for x in probabilities if x['score'] > CERTAINTY_THRESHOLD and x['entity'] != 'LABEL_0'}
 
         return most_certain_predictions
+    
+    def uncertainty_sampling_by_target_class(self, classifier: BaseEstimator, X, n_instances: int = 1):
+        """
+        Uncertainty sampling query strategy. Selects the least sure instances for labelling w.r.t. the target class.
+
+        Arguments
+        ---------
+            classifier: The classifier for which the labels are to be queried.
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            The indices of the instances from X chosen to be labelled.
+            The uncertainty metric of the chosen instances. 
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        absolute_diff = np.abs(target_class_prob - 0.5) 
+        sorted_indices = np.argsort(absolute_diff)
+        nearest_indices = sorted_indices[:n_instances] 
+        nearest_values = target_class_prob[nearest_indices]
+
+        return (nearest_indices, nearest_values)
+    
+    def certainty_sampling_by_target_class(self, classifier: BaseEstimator, X, n_instances: int = 1):
+        """
+        Certainty sampling query strategy. Selects the surest instances for labelling w.r.t. the target class.
+
+        Arguments
+        ---------
+            classifier: The classifier for which the labels are to be queried.
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            The indices of the instances from X chosen to be labelled.
+            The certainty metric of the chosen instances. 
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        sorted_indices = np.argsort(target_class_prob)
+        nearest_indices = sorted_indices[-n_instances:] 
+        nearest_values = target_class_prob[nearest_indices]
+
+        return (nearest_indices, nearest_values)
+    
+    def random_sampling(self, classifier,  X, n_instances: int = 1):
+        """
+        Random sampling query strategy. Selects instances randomly.
+
+        Arguments
+        ---------
+            X: The pool of samples to query from.
+            n_instances: Number of samples to be queried.
+
+        Returns
+        -------
+            Randomly chosen indices of the instances from X to be labelled.
+            A placeholder for certainty metric (since this is random sampling).
+        """
+        probabilities = classifier.predict_proba(X)
+        target_class_prob = probabilities.T[1]
+
+        n_samples = target_class_prob.shape[0]
+        random_indices = np.random.choice(n_samples, size=n_instances, replace=False)
+
+        return (random_indices, np.zeros(n_instances,))

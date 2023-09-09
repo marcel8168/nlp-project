@@ -1,6 +1,7 @@
 import importlib
 import os
 import platform
+import shutil
 import subprocess
 from typing import Optional, Tuple
 
@@ -9,8 +10,20 @@ import constants
 
 
 class System:
+    """
+    The System class manages system-related operations for the active learning toolset.
+    This class provides methods for interacting with the operating system, managing constants,
+    copying configuration files, starting and terminating Docker containers, and initiating the BRAT server.
+
+    Attributes
+    ----------
+        operating_system (str): The name of the operating system (e.g., "Windows", "Linux").
+        slash (str): The path separator used by the operating system.
+    """
     def __init__(self) -> None:
+        # Determine the operating system for path handling
         self.operating_system = platform.system()
+        self.slash = "\\" if self.operating_system.lower() == "windows" else "/"
         pass
         
     def get_file_names_from_path(self, path_to_brat: str, folder_name: Optional[str] = None, collection_name: Optional[str] = None):
@@ -30,13 +43,19 @@ class System:
                                 and collection name (if provided). The list of file names contains the names
                                 of the files within the collection path.
         """
-        slash = "\\" if self.operating_system.lower() == "windows" else "/"
-        collection_path = path_to_brat + slash + folder_name + slash if folder_name else path_to_brat
-        collection_path += collection_name + slash if collection_name else ""
+        collection_path = path_to_brat + self.slash + folder_name + self.slash if folder_name else path_to_brat
+        collection_path += collection_name + self.slash if collection_name else ""
         file_names = os.listdir(collection_path) if os.path.isdir(collection_path) else []
         return collection_path, file_names
     
     def start_docker(self) -> None:
+        """
+        Starts the Docker container.
+
+        Raises
+        ------
+            subprocess.CalledProcessError: If an error occurs while starting the Docker container.
+        """
         try:
             if self.operating_system.lower() == "windows":
                 subprocess.Popen(['start', 'cmd', '/c', 'docker compose up'], shell=True)
@@ -48,6 +67,13 @@ class System:
             print(f"Error: {e}")
 
     def terminate_docker(self) -> None:
+        """
+        Terminates the Docker container.
+
+        Raises
+        ------
+            subprocess.CalledProcessError: If an error occurs while terminating the Docker container.
+        """
         try:
             if self.operating_system.lower() == "windows":
                 subprocess.Popen(['start', 'cmd', '/c', 'docker compose down'], shell=True)
@@ -110,3 +136,25 @@ class System:
 
     def reload(self) -> None:
         pyautogui.hotkey('F5')
+
+    def copy_config_directory(self) -> None:
+        """
+        Copies the configuration directory to the destination.
+
+        Raises
+        ------
+            Exception: If an error occurs during the copying process.
+        """
+        source_dir = "./config/"
+        destination_dir = "../brat/"
+
+        try:
+            for item in os.listdir(source_dir):
+                source_item = os.path.join(source_dir, item)
+                destination_item = os.path.join(destination_dir, item)
+                if os.path.isdir(source_item):
+                    shutil.copytree(source_item, destination_item)
+            else:
+                shutil.copy2(source_item, destination_item)
+        except Exception as e:
+            print(f"An error occurred while copying the directory: {e}")

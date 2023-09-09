@@ -5,10 +5,11 @@ import evaluate
 from joblib import dump, load
 from datasets import load_dataset
 import pandas as pd
-from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline
+from transformers import AutoTokenizer, AutoModelForTokenClassification, TrainingArguments, Trainer, DataCollatorForTokenClassification, pipeline, logging
 from sklearn.base import BaseEstimator
 import numpy as np
-from datasets import Dataset
+import datasets
+
 import matplotlib.pyplot as plt
 
 from constants import METRICS_FILE_PATH, TARGET_CLASS
@@ -72,7 +73,7 @@ class SciBertClassifier(BaseEstimator):
             Loads a saved model from the specified path.
     """
 
-    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=1, path="", token_aggregation=""):
+    def __init__(self, num_classes: int, label, label_list, batch_size=16, learning_rate=1e-5, num_epochs=5, weight_decay=0.05, logging_steps=0, path="", token_aggregation=""):
         self.metric = evaluate.load("seqeval")
         
         self.model_checkpoint = "allenai/scibert_scivocab_uncased"
@@ -81,6 +82,12 @@ class SciBertClassifier(BaseEstimator):
 
         self.label = label
         self.label_list = label_list
+
+        logging.disable_default_handler()
+        logging.disable_progress_bar()
+        logging.disable_propagation()
+        datasets.logging.disable_propagation()
+        datasets.logging.disable_progress_bar()
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_checkpoint)
         self.model = AutoModelForTokenClassification.from_pretrained(self.model_checkpoint, num_labels=num_classes)
@@ -97,6 +104,7 @@ class SciBertClassifier(BaseEstimator):
             per_device_eval_batch_size=batch_size,
             num_train_epochs=num_epochs,
             weight_decay=weight_decay,
+            logging_strategy='no',
             logging_steps=logging_steps
         )
 
@@ -117,7 +125,8 @@ class SciBertClassifier(BaseEstimator):
             BaseEstimator: The loaded BaseEstimator model.
         """
         path = path if path else self.path
-        self.model = load(path)
+        if os.path.exists(path):
+            self.model = load(path)
     
     def save(self, path: Optional[str] = "") -> None:
         """
@@ -179,7 +188,7 @@ class SciBertClassifier(BaseEstimator):
         
         return tokens
 
-    def fit(self, X: Dataset) -> BaseEstimator:
+    def fit(self, X: datasets.Dataset) -> BaseEstimator:
         """
         Fits the model to the training data and performs training.
 
@@ -218,11 +227,16 @@ class SciBertClassifier(BaseEstimator):
         -------
             numpy.ndarray of shape (n_samples,): The predicted class probabilities.
         """
-        predictions = self.predict(X=X)
-        predictions = np.array([[data["score"] for data in dataset] for dataset in predictions]).flatten()
-        counter_predictions = 1 - predictions.copy()
+        predictions = self.predict(X=X).flatten()
+        score_list = []
+
+        for pred in predictions:
+            if "label_0" in pred['entity'].lower():
+                score_list.append([pred['score'], 1 - pred['score']])
+            else:
+                score_list.append([1 - pred['score'], pred['score']])
         
-        return np.c_[predictions, counter_predictions]
+        return np.array(score_list)
 
     
 
@@ -240,7 +254,7 @@ class SciBertClassifier(BaseEstimator):
         """
         ner_pipeline = pipeline(task="ner", model=self.model, tokenizer=self.tokenizer, device=-1)
         predictions = [self.whole_word_prediction(input=ner_pipeline(text), aggregation_strategy="max") for text in X]
-        self.predictions = np.array([[word for word in prediction if word["word"].isalnum()] for prediction in predictions])
+        self.predictions = np.array([[word for word in prediction if word["word"].isalnum()] for prediction in predictions], dtype=object)
 
         return self.predictions
 
@@ -290,6 +304,17 @@ class SciBertClassifier(BaseEstimator):
         return probabilities
     
     def performance_report(self, path_to_test_set: str):
+        """
+        Generates a performance report based on predictions and ground truth labels.
+
+        Arguments
+        ---------
+            path_to_test_set (str): The path to the test set data in JSON format.
+
+        Returns
+        -------
+            dict: A dictionary containing performance metrics, including accuracy, precision, recall, F1-score
+        """
         predictions = []
         ground_truth = []
 
@@ -309,6 +334,9 @@ class SciBertClassifier(BaseEstimator):
         return metrics
     
     def create_metrics_file(self) -> None:
+        """
+        Creates an empty metrics file with predefined metric placeholders.
+        """
         metrics = {
             "precision": 0.0,
             "recall": 0.0,

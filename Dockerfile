@@ -1,4 +1,5 @@
-FROM python:3.10-alpine AS bratbase
+# forked from https://github.com/dtoddenroth/annotationimage
+# download bratFROM python:3.10-alpine AS bratbase
 
 WORKDIR /brat
 ADD https://github.com/nlplab/brat/archive/refs/heads/master.zip /tmp/brat-latest.zip

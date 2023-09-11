@@ -4,10 +4,10 @@
         "Ibuprofen"
     ],
     "drug_indices_start": [
-        26
+        27
     ],
     "drug_indices_end": [
-        34
+        36
     ]
 }
 {
@@ -21,7 +21,7 @@
         16
     ],
     "drug_indices_end": [
-        6,
+        7,
         28
     ]
 }
@@ -43,10 +43,10 @@
         "Penicillin"
     ],
     "drug_indices_start": [
-        38
+        46
     ],
     "drug_indices_end": [
-        48
+        56
     ]
 }
 {
@@ -55,10 +55,10 @@
         "Lisinopril"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        30
+        32
     ]
 }
 {
@@ -79,10 +79,10 @@
         "Aspirin"
     ],
     "drug_indices_start": [
-        49
+        63
     ],
     "drug_indices_end": [
-        56
+        70
     ]
 }
 {
@@ -103,10 +103,10 @@
         "Warfarin"
     ],
     "drug_indices_start": [
-        10
+        11
     ],
     "drug_indices_end": [
-        18
+        19
     ]
 }
 {
@@ -115,10 +115,10 @@
         "Sulfa"
     ],
     "drug_indices_start": [
-        21
+        27
     ],
     "drug_indices_end": [
-        26
+        32
     ]
 }
 {
@@ -139,10 +139,10 @@
         "Azithromycin"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        32
+        34
     ]
 }
 {
@@ -151,10 +151,10 @@
         "Omeprazole"
     ],
     "drug_indices_start": [
-        36
+        50
     ],
     "drug_indices_end": [
-        46
+        60
     ]
 }
 {
@@ -166,7 +166,7 @@
         0
     ],
     "drug_indices_end": [
-        7
+        8
     ]
 }
 {
@@ -199,10 +199,10 @@
         "Loratadine"
     ],
     "drug_indices_start": [
-        36
+        48
     ],
     "drug_indices_end": [
-        47
+        58
     ]
 }
 {
@@ -211,10 +211,10 @@
         "Clopidogrel"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        31
+        33
     ]
 }
 {
@@ -235,10 +235,10 @@
         "Hydrocortisone"
     ],
     "drug_indices_start": [
-        22
+        33
     ],
     "drug_indices_end": [
-        36
+        47
     ]
 }
 {
@@ -247,10 +247,10 @@
         "Furosemide"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        22
+        21
     ]
 }
 {
@@ -259,10 +259,10 @@
         "Simvastatin"
     ],
     "drug_indices_start": [
-        39
+        56
     ],
     "drug_indices_end": [
-        51
+        67
     ]
 }
 {
@@ -274,7 +274,7 @@
         0
     ],
     "drug_indices_end": [
-        10
+        11
     ]
 }
 {
@@ -283,10 +283,10 @@
         "Topiramate"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        30
+        32
     ]
 }
 {
@@ -295,10 +295,10 @@
         "Amoxicillin"
     ],
     "drug_indices_start": [
-        35
+        46
     ],
     "drug_indices_end": [
-        46
+        57
     ]
 }
 {
@@ -307,7 +307,7 @@
         "Nitroglycerin"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
         24
@@ -331,10 +331,10 @@
         "Amlodipine"
     ],
     "drug_indices_start": [
-        38
+        44
     ],
     "drug_indices_end": [
-        48
+        54
     ]
 }
 {
@@ -343,10 +343,10 @@
         "Risperidone"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        31
+        33
     ]
 }
 {
@@ -367,7 +367,7 @@
         "Codeine"
     ],
     "drug_indices_start": [
-        28
+        27
     ],
     "drug_indices_end": [
         34
@@ -379,10 +379,10 @@
         "Escitalopram"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        24
+        23
     ]
 }
 {
@@ -391,7 +391,7 @@
         "Alprazolam"
     ],
     "drug_indices_start": [
-        26
+        27
     ],
     "drug_indices_end": [
         37
@@ -406,7 +406,7 @@
         0
     ],
     "drug_indices_end": [
-        11
+        10
     ]
 }
 {
@@ -415,10 +415,10 @@
         "Pravastatin"
     ],
     "drug_indices_start": [
-        20
+        23
     ],
     "drug_indices_end": [
-        31
+        34
     ]
 }
 {
@@ -427,10 +427,10 @@
         "Metoclopramide"
     ],
     "drug_indices_start": [
-        36
+        44
     ],
     "drug_indices_end": [
-        50
+        58
     ]
 }
 {
@@ -451,10 +451,10 @@
         "Losartan"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        20
+        19
     ]
 }
 {
@@ -463,10 +463,10 @@
         "Erythromycin"
     ],
     "drug_indices_start": [
-        38
+        43
     ],
     "drug_indices_end": [
-        50
+        55
     ]
 }
 {
@@ -475,10 +475,10 @@
         "Methotrexate"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        32
+        34
     ]
 }
 {
@@ -499,10 +499,10 @@
         "Zolpidem"
     ],
     "drug_indices_start": [
-        36
+        48
     ],
     "drug_indices_end": [
-        44
+        56
     ]
 }
 {
@@ -511,10 +511,10 @@
         "Loperamide"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        22
+        21
     ]
 }
 {
@@ -523,10 +523,10 @@
         "Ciprofloxacin"
     ],
     "drug_indices_start": [
-        26
+        27
     ],
     "drug_indices_end": [
-        39
+        40
     ]
 }
 {
@@ -535,10 +535,10 @@
         "Bupropion"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        29
+        31
     ]
 }
 {
@@ -550,7 +550,7 @@
         0
     ],
     "drug_indices_end": [
-        22
+        23
     ]
 }
 {
@@ -559,10 +559,10 @@
         "Ranitidine"
     ],
     "drug_indices_start": [
-        36
+        51
     ],
     "drug_indices_end": [
-        46
+        61
     ]
 }
 {
@@ -571,10 +571,10 @@
         "Methadone"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        21
+        20
     ]
 }
 {
@@ -583,10 +583,10 @@
         "Duloxetine"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        30
+        32
     ]
 }
 {
@@ -595,10 +595,10 @@
         "Propranolol"
     ],
     "drug_indices_start": [
-        39
+        50
     ],
     "drug_indices_end": [
-        51
+        61
     ]
 }
 {
@@ -619,10 +619,10 @@
         "Citalopram"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        23
+        21
     ]
 }
 {
@@ -631,10 +631,10 @@
         "Aripiprazole"
     ],
     "drug_indices_start": [
-        36
+        47
     ],
     "drug_indices_end": [
-        48
+        59
     ]
 }
 {
@@ -655,10 +655,10 @@
         "Sertraline"
     ],
     "drug_indices_start": [
-        20
+        23
     ],
     "drug_indices_end": [
-        30
+        33
     ]
 }
 {
@@ -667,10 +667,10 @@
         "Trazodone"
     ],
     "drug_indices_start": [
-        39
+        51
     ],
     "drug_indices_end": [
-        48
+        60
     ]
 }
 {
@@ -691,10 +691,10 @@
         "Lamotrigine"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        23
+        22
     ]
 }
 {
@@ -703,10 +703,10 @@
         "Opioid"
     ],
     "drug_indices_start": [
-        36
+        50
     ],
     "drug_indices_end": [
-        42
+        56
     ]
 }
 {
@@ -715,10 +715,10 @@
         "Methocarbamol"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        33
+        35
     ]
 }
 {
@@ -739,10 +739,10 @@
         "Fluoxetine"
     ],
     "drug_indices_start": [
-        38
+        41
     ],
     "drug_indices_end": [
-        48
+        51
     ]
 }
 {
@@ -751,10 +751,10 @@
         "Carbamazepine"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        26
+        24
     ]
 }
 {
@@ -763,10 +763,10 @@
         "Quetiapine"
     ],
     "drug_indices_start": [
-        36
+        56
     ],
     "drug_indices_end": [
-        46
+        66
     ]
 }
 {
@@ -787,10 +787,10 @@
         "Methamphetamine"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        33
+        37
     ]
 }
 {
@@ -799,10 +799,10 @@
         "Ranitidine"
     ],
     "drug_indices_start": [
-        38
+        44
     ],
     "drug_indices_end": [
-        48
+        54
     ]
 }
 {
@@ -811,10 +811,10 @@
         "Venlafaxine"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        23
+        22
     ]
 }
 {
@@ -823,10 +823,10 @@
         "Ciprofloxacin"
     ],
     "drug_indices_start": [
-        36
+        46
     ],
     "drug_indices_end": [
-        49
+        59
     ]
 }
 {
@@ -847,10 +847,10 @@
         "Dulcolax"
     ],
     "drug_indices_start": [
-        26
+        23
     ],
     "drug_indices_end": [
-        34
+        31
     ]
 }
 {
@@ -871,10 +871,10 @@
         "Rabeprazole"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        24
+        22
     ]
 }
 {
@@ -883,10 +883,10 @@
         "Escitalopram"
     ],
     "drug_indices_start": [
-        39
+        50
     ],
     "drug_indices_end": [
-        51
+        62
     ]
 }
 {
@@ -898,7 +898,7 @@
         0
     ],
     "drug_indices_end": [
-        11
+        10
     ]
 }
 {
@@ -907,10 +907,10 @@
         "Tramadol"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        28
+        30
     ]
 }
 {
@@ -919,10 +919,10 @@
         "Lamotrigine"
     ],
     "drug_indices_start": [
-        38
+        47
     ],
     "drug_indices_end": [
-        50
+        58
     ]
 }
 {
@@ -943,10 +943,10 @@
         "Paroxetine"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        22
+        21
     ]
 }
 {
@@ -955,10 +955,10 @@
         "Olanzapine"
     ],
     "drug_indices_start": [
-        53
+        52
     ],
     "drug_indices_end": [
-        64
+        62
     ]
 }
 {
@@ -970,7 +970,7 @@
         0
     ],
     "drug_indices_end": [
-        9
+        10
     ]
 }
 {
@@ -979,10 +979,10 @@
         "Mirtazapine"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        31
+        33
     ]
 }
 {
@@ -991,10 +991,10 @@
         "Isotretinoin"
     ],
     "drug_indices_start": [
-        39
+        53
     ],
     "drug_indices_end": [
-        51
+        65
     ]
 }
 {
@@ -1015,10 +1015,10 @@
         "Gabapentin"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        22
+        21
     ]
 }
 {
@@ -1027,10 +1027,10 @@
         "Hydroxyzine"
     ],
     "drug_indices_start": [
-        38
+        45
     ],
     "drug_indices_end": [
-        50
+        56
     ]
 }
 {
@@ -1051,10 +1051,10 @@
         "Methyldopa"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        31
+        32
     ]
 }
 {
@@ -1063,10 +1063,10 @@
         "Quinidine"
     ],
     "drug_indices_start": [
-        36
+        56
     ],
     "drug_indices_end": [
-        45
+        65
     ]
 }
 {
@@ -1087,10 +1087,10 @@
         "Budesonide"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        22
+        21
     ]
 }
 {
@@ -1099,10 +1099,10 @@
         "Quinine"
     ],
     "drug_indices_start": [
-        38
+        48
     ],
     "drug_indices_end": [
-        45
+        55
     ]
 }
 {
@@ -1123,10 +1123,10 @@
         "Sulfamethoxazole-trimethoprim"
     ],
     "drug_indices_start": [
-        20
+        22
     ],
     "drug_indices_end": [
-        43
+        51
     ]
 }
 {
@@ -1135,10 +1135,10 @@
         "Donepezil"
     ],
     "drug_indices_start": [
-        39
+        47
     ],
     "drug_indices_end": [
-        48
+        56
     ]
 }
 {
@@ -1159,10 +1159,10 @@
         "Ropinirole"
     ],
     "drug_indices_start": [
-        12
+        11
     ],
     "drug_indices_end": [
-        23
+        21
     ]
 }
 {
@@ -1171,10 +1171,10 @@
         "Tacrolimus"
     ],
     "drug_indices_start": [
-        38
+        52
     ],
     "drug_indices_end": [
-        48
+        62
     ]
 }
 {
